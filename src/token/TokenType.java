@@ -25,5 +25,6 @@ public enum TokenType {
     FOR,
     WHILE,
     DECLARE,
-    TO;
+    TO,
+    EOF;
 }

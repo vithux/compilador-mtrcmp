@@ -3,10 +3,10 @@ package token;
 public class Token {
     private TokenType tokenType;
     private String lexeme;
-    private int col;
-    private int line;
+    private long col;
+    private long line;
 
-    public Token(TokenType tokenType, String lexeme, int col, int line) {
+    public Token(TokenType tokenType, String lexeme, long col, long line) {
         this.setTokenType(tokenType);
         this.setLexeme(lexeme);
         this.setCol(col);
@@ -29,19 +29,19 @@ public class Token {
         this.lexeme = lexeme;
     }
 
-    public int getCol() {
+    public long getCol() {
         return col;
     }
 
-    public void setCol(int col) {
+    public void setCol(long col) {
         this.col = col;
     }
 
-    public int getLine() {
+    public long getLine() {
         return line;
     }
 
-    public void setLine(int line) {
+    public void setLine(long line) {
         this.line = line;
     }
 }
