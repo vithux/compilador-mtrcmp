@@ -1,1 +1,5 @@
+# Idea workspace configuration
+.idea/workspace.xml
+
+# Build directory
 out/
