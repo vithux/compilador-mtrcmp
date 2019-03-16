@@ -4,16 +4,15 @@ import loader.FileLoader;
 import token.Token;
 import token.TokenType;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 public class LexicalAnalyzer {
 
     private FileLoader fileLoader;
 
-    public LexicalAnalyzer(File file) {
+    public LexicalAnalyzer(String fileName) {
         try {
-            this.fileLoader = new FileLoader(file);
+            this.fileLoader = new FileLoader(fileName);
         } catch (FileNotFoundException e) {
             System.out.println("File Not Found =(");
         }
