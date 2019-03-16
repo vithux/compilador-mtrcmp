@@ -79,7 +79,22 @@ public class LexicalAnalyzer {
     }
 
     public Token isLiteral(FileLoader fileLoader) {
-        return null;
+        StringBuilder lexeme = new StringBuilder();
+        char c;
+
+        try {
+            c = fileLoader.getNextChar();
+
+            while (c != '"') {
+                c = fileLoader.getNextChar();
+                lexeme.append(c);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            // retorna erro
+        }
+
+        return new Token(TokenType.LITERAL, lexeme.toString(), fileLoader.getColumn(), fileLoader.getLine());
     }
 
     public Token isAssign(FileLoader fileLoader) {
