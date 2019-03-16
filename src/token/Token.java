@@ -44,4 +44,17 @@ public class Token {
     public void setLine(long line) {
         this.line = line;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Token{");
+
+        sb.append("tokenType=").append(tokenType);
+        sb.append(", lexeme='").append(lexeme).append('\'');
+        sb.append(", col=").append(col);
+        sb.append(", line=").append(line);
+        sb.append('}');
+
+        return sb.toString();
+    }
 }
