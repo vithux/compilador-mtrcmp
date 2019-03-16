@@ -4,7 +4,9 @@ import loader.FileLoader;
 import token.Token;
 import token.TokenType;
 
+import java.io.EOFException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class LexicalAnalyzer {
 
@@ -19,7 +21,7 @@ public class LexicalAnalyzer {
     }
 
     public Token nextToken() {
-        char c = ' ';
+        char c;
 
         //Percorre o arquivo eliminado WhiteSpace
         while (true) {
@@ -28,19 +30,21 @@ public class LexicalAnalyzer {
                 if (!Character.isWhitespace(c)) {
                     break;
                 }
-            } catch (Exception e) {
+            } catch (EOFException e) {
+                return new Token(TokenType.EOF, "EOF", fileLoader.getColumn(), fileLoader.getLine());
+            } catch (IOException e){
                 e.printStackTrace();
-                break;
+                return null;
             }
         }
 
         switch (c) {
             case ';':
-                return new Token(TokenType.TERM, ";", fileLoader.getColumn(), fileLoader.getLine());
+                return new Token(TokenType.TERM, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
             case ')':
-                return new Token(TokenType.R_PAR, ")", fileLoader.getColumn(), fileLoader.getLine());
+                return new Token(TokenType.R_PAR, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
             case '(':
-                return new Token(TokenType.L_PAR, "(", fileLoader.getColumn(), fileLoader.getLine());
+                return new Token(TokenType.L_PAR, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
             case '+':
             case '-':
                 return new Token(TokenType.ARIT_AS, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
@@ -49,15 +53,36 @@ public class LexicalAnalyzer {
                 return new Token(TokenType.ARIT_MD, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
             case '<':
                 return isAssign(fileLoader);
-
+            case '$':
+                return isRelop(fileLoader);
+            case '"':
+                return isLiteral(fileLoader);
+            default:
+                if (Character.isDigit(c)) {
+                    return isDigit(fileLoader, c);
+                } else {
+                    return isLetter(fileLoader, c);
+                }
         }
+    }
 
+    public Token isRelop(FileLoader fileLoader) {
+        return null;
+    }
 
-        return new Token(null, null, 0, 0);
+    public Token isDigit(FileLoader fileLoader, char c) {
+        return null;
+    }
+
+    public Token isLetter(FileLoader fileLoader, char c) {
+        return null;
+    }
+
+    public Token isLiteral(FileLoader fileLoader) {
+        return null;
     }
 
     public Token isAssign(FileLoader fileLoader) {
-
         try {
             char c = fileLoader.getNextChar();
             if (c == '-') {
