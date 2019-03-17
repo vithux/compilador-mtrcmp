@@ -1,4 +1,4 @@
-import syntactic.SyntacticalAnalyzer;
+import syntactic.SyntacticAnalyser;
 
 public class Compiler {
 
@@ -10,7 +10,7 @@ public class Compiler {
             return;
         }
 
-        SyntacticalAnalyzer syntacticalAnalyzer = new SyntacticalAnalyzer(fileName);
-        syntacticalAnalyzer.process();
+        SyntacticAnalyser syntacticAnalyser = new SyntacticAnalyser(fileName);
+        syntacticAnalyser.process();
     }
 }

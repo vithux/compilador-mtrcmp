@@ -4,11 +4,11 @@ import lexical.LexicalAnalyzer;
 import token.Token;
 import token.TokenType;
 
-public class SyntacticalAnalyzer {
+public class SyntacticAnalyser {
 
     private final LexicalAnalyzer lexicalAnalyzer;
 
-    public SyntacticalAnalyzer(String filePath) {
+    public SyntacticAnalyser(String filePath) {
         this.lexicalAnalyzer = new LexicalAnalyzer(filePath);
     }
 
