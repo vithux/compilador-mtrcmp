@@ -10,104 +10,142 @@ import java.io.IOException;
 
 public class LexicalAnalyzer {
 
+    private static final char TOKEN_TERMINATOR = ';';
+    private static final char TOKEN_RIGHT_PARENTHESIS = ')';
+    private static final char TOKEN_LEFT_PARENTHESIS = '(';
+    private static final char TOKEN_ARITHMETIC_PLUS = '+';
+    private static final char TOKEN_ARITHMETIC_MINUS = '-';
+    private static final char TOKEN_ARITHMETIC_MULTIPLY = '*';
+    private static final char TOKEN_ARITHMETIC_DIVIDE = '/';
+    private static final char TOKEN_ASSIGNMENT = '<';
+    private static final char TOKEN_RELATIONAL_OPERATION = '$';
+    private static final char TOKEN_QUOTE = '"';
+    private static final char TOKEN_DASH = '-';
+
     private FileLoader fileLoader;
 
     public LexicalAnalyzer(String fileName) {
         try {
             this.fileLoader = new FileLoader(fileName);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             System.out.println("File Not Found =(");
         }
     }
 
     public Token nextToken() {
-        char c;
+        char character;
+        String lexeme;
 
         //Percorre o arquivo eliminado WhiteSpace
         while (true) {
             try {
-                c = fileLoader.getNextChar();
-                if (!Character.isWhitespace(c)) {
+                character = fileLoader.getNextChar();
+
+                if (!Character.isWhitespace(character)) {
+                    lexeme = Character.toString(character);
                     break;
                 }
-            } catch (EOFException e) {
-                return new Token(TokenType.EOF, "EOF", fileLoader.getColumn(), fileLoader.getLine());
-            } catch (IOException e){
+            }
+            catch (EOFException e) {
+                return createToken(TokenType.EOF, "EOF");
+            }
+            catch (IOException e) {
                 e.printStackTrace();
                 return null;
             }
         }
 
-        switch (c) {
-            case ';':
-                return new Token(TokenType.TERM, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
-            case ')':
-                return new Token(TokenType.R_PAR, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
-            case '(':
-                return new Token(TokenType.L_PAR, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
-            case '+':
-            case '-':
-                return new Token(TokenType.ARIT_AS, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
-            case '*':
-            case '/':
-                return new Token(TokenType.ARIT_MD, Character.toString(c), fileLoader.getColumn(), fileLoader.getLine());
-            case '<':
+        switch (character) {
+            case TOKEN_TERMINATOR:
+                return createToken(TokenType.TERM, lexeme);
+
+            case TOKEN_RIGHT_PARENTHESIS:
+                return createToken(TokenType.R_PAR, lexeme);
+
+            case TOKEN_LEFT_PARENTHESIS:
+                return createToken(TokenType.L_PAR, lexeme);
+
+            case TOKEN_ARITHMETIC_PLUS:
+            case TOKEN_ARITHMETIC_MINUS:
+                return createToken(TokenType.ARIT_AS, lexeme);
+
+            case TOKEN_ARITHMETIC_MULTIPLY:
+            case TOKEN_ARITHMETIC_DIVIDE:
+                return createToken(TokenType.ARIT_MD, lexeme);
+
+            case TOKEN_ASSIGNMENT:
                 return isAssign(fileLoader);
-            case '$':
+
+            case TOKEN_RELATIONAL_OPERATION:
                 return isRelop(fileLoader);
-            case '"':
+
+            case TOKEN_QUOTE:
                 return isLiteral(fileLoader);
+
             default:
-                if (Character.isDigit(c)) {
-                    return isDigit(fileLoader, c);
-                } else {
-                    return isLetter(fileLoader, c);
+                if (Character.isDigit(character)) {
+                    return isDigit(fileLoader, character);
                 }
+                else if (Character.isLetter(character)) {
+                    return isLetter(fileLoader, character);
+                }
+
+                return null;
         }
     }
 
-    public Token isRelop(FileLoader fileLoader) {
+    private Token createToken(TokenType tokenType, String lexeme) {
+        return new Token(tokenType, lexeme, fileLoader.getColumn(), fileLoader.getLine());
+    }
+
+    private Token isRelop(FileLoader fileLoader) {
         return null;
     }
 
-    public Token isDigit(FileLoader fileLoader, char c) {
+    private Token isDigit(FileLoader fileLoader, char c) {
         return null;
     }
 
-    public Token isLetter(FileLoader fileLoader, char c) {
+    private Token isLetter(FileLoader fileLoader, char c) {
         return null;
     }
 
-    public Token isLiteral(FileLoader fileLoader) {
+    private Token isLiteral(FileLoader fileLoader) {
+        char character;
         StringBuilder lexeme = new StringBuilder();
-        char c;
 
         try {
-            c = fileLoader.getNextChar();
+            character = fileLoader.getNextChar();
 
-            while (c != '"') {
-                c = fileLoader.getNextChar();
-                lexeme.append(c);
+            while (character != TOKEN_QUOTE) {
+                character = fileLoader.getNextChar();
+                lexeme.append(character);
             }
-        }catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
             // retorna erro
         }
 
-        return new Token(TokenType.LITERAL, lexeme.toString(), fileLoader.getColumn(), fileLoader.getLine());
+        return createToken(TokenType.LITERAL, lexeme.toString());
     }
 
-    public Token isAssign(FileLoader fileLoader) {
+    private Token isAssign(FileLoader fileLoader) {
         try {
-            char c = fileLoader.getNextChar();
-            if (c == '-') {
-                return new Token(TokenType.ASSIGN, "<-", fileLoader.getColumn(), fileLoader.getLine());
-            } else {
+            char character = fileLoader.getNextChar();
+
+            if (character == TOKEN_DASH) {
+                return createToken(TokenType.ASSIGN, "<-");
+            }
+            else {
                 // retornar erro
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
+
         return null; // remover após o erro
     }
 }
