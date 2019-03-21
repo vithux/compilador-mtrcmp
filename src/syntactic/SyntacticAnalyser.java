@@ -19,6 +19,6 @@ public class SyntacticAnalyser {
             token = lexicalAnalyzer.nextToken();
             System.out.println(token.toString());
         }
-        while (TokenType.EOF.equals(token.getTokenType()));
+        while (!TokenType.EOF.equals(token.getTokenType()));
     }
 }
