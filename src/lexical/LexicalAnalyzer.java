@@ -116,12 +116,15 @@ public class LexicalAnalyzer {
         StringBuilder lexeme = new StringBuilder();
 
         try {
+            fileLoader.resetLastChar();
             character = fileLoader.getNextChar();
+            lexeme.append(character);
 
-            while (character != TOKEN_QUOTE) {
+            do {
                 character = fileLoader.getNextChar();
                 lexeme.append(character);
-            }
+            } while (character != TOKEN_QUOTE);
+
         }
         catch (Exception e){
             e.printStackTrace();
