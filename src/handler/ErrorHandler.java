@@ -2,6 +2,7 @@ package handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public final class ErrorHandler {
     private static ErrorHandler instance;
@@ -15,14 +16,30 @@ public final class ErrorHandler {
         listError.add(err);
     }
 
-    public List<String> errorReport(){
-        return listError;
+    public String errorReport(){
+        StringBuilder stringBuilder = new StringBuilder();
+        StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
+
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("### ERROR HANDLER REPORT ###");
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append(System.lineSeparator());
+
+        for (String error : listError) {
+            stringJoiner.add(error);
+        }
+
+        stringBuilder.append(stringJoiner.toString());
+
+        return stringBuilder.toString();
     }
 
     public static ErrorHandler getInstance(){
-        if(instance == null){
+        if (instance == null){
             instance = new ErrorHandler();
         }
+
         return instance;
     }
 }

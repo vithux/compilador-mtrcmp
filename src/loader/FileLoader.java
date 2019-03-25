@@ -10,14 +10,15 @@ public class FileLoader extends BufferedReader {
     private long line;
     private long column;
     private long lastLineSize;
+
+    private char lineSeparatorStart;
     
     /**
      * Construtor que recebe nome do arquivo.
      * @param fileName nome do arquivo que deve ser aberto e mantido pela classe
      * @throws FileNotFoundException o arquivo nao foi encontrado
      */
-    public FileLoader(String fileName) 
-    throws FileNotFoundException {
+    public FileLoader(String fileName) throws FileNotFoundException {
         this(new File(fileName));
     }
     
@@ -26,12 +27,17 @@ public class FileLoader extends BufferedReader {
      * @param file arquivo que deve ser aberto e mantido pela classe
      * @throws FileNotFoundException o arquivo nao foi encontrado
      */
-    public FileLoader(File file) 
-    throws FileNotFoundException {
+    public FileLoader(File file) throws FileNotFoundException {
         super((new FileReader(file)));
         line = 1;
         column = 0;
         lastLineSize = 0;
+
+        if (isCRLFLineEnding()) {
+            lineSeparatorStart = '\r';
+        } else {
+            lineSeparatorStart = '\n';
+        }
     }
     
     /**
@@ -41,16 +47,20 @@ public class FileLoader extends BufferedReader {
      * @throws IOException caso um erro de leitura ocorra
      * @throws EOFException excessao retornada quando o final do arquivo � atingido.
       */
-    public char getNextChar() 
-    throws EOFException, IOException {
+    public char getNextChar() throws EOFException, IOException {
         this.mark(1);
         int charValue = this.read();
         column++;
-        if (charValue == Character.LINE_SEPARATOR) {
+
+        if (charValue == lineSeparatorStart) {
+            if (isCRLFLineEnding()) {
+                column++;
+            }
+
             line++;
             lastLineSize = column;
             column = 0;
-        } 
+        }
         
         if (charValue == -1) throw new EOFException(); 
         return (char) charValue; 
@@ -83,4 +93,7 @@ public class FileLoader extends BufferedReader {
         return column;
     }
 
+    private static boolean isCRLFLineEnding() {
+        return System.lineSeparator().length() == 2;
+    }
 }

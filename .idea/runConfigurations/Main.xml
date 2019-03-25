@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Main" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="Compiler" />
+    <option name="MAIN_CLASS_NAME" value="compiler.Compiler" />
     <module name="compilador-mtrcmp" />
     <option name="PROGRAM_PARAMETERS" value="$ContentRoot$/example_input" />
     <RunnerSettings RunnerId="Run" />

@@ -26,5 +26,6 @@ public enum TokenType {
     WHILE,
     DECLARE,
     TO,
-    EOF
+    EOF,
+    ERROR
 }

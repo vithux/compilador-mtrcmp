@@ -1,13 +1,19 @@
 package lexical;
 
+import handler.ErrorHandler;
+import lexical.parser.AbstractParserFactory;
+import lexical.parser.ParserNames;
 import loader.FileLoader;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import token.Token;
+import token.TokenBuilder;
 import token.TokenType;
 
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+// @TODO: Padronizar estrutura de erros
 public class LexicalAnalyzer {
 
     private static final char TOKEN_TERMINATOR = ';';
@@ -22,22 +28,19 @@ public class LexicalAnalyzer {
     private static final char TOKEN_QUOTE = '"';
     private static final char TOKEN_DASH = '-';
 
+    private static final String EOF_LEXEME = "EOF";
+
     private FileLoader fileLoader;
 
-    public LexicalAnalyzer(String fileName) {
-        try {
-            this.fileLoader = new FileLoader(fileName);
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("File Not Found =(");
-        }
+    public LexicalAnalyzer(String fileName) throws FileNotFoundException {
+        this.fileLoader = new FileLoader(fileName);
     }
 
-    public Token nextToken() {
+    public Token nextToken() throws IOException {
         char character;
         String lexeme;
 
-        //Percorre o arquivo eliminado WhiteSpace
+        // Percorre o arquivo eliminado WhiteSpace
         while (true) {
             try {
                 character = fileLoader.getNextChar();
@@ -48,11 +51,7 @@ public class LexicalAnalyzer {
                 }
             }
             catch (EOFException e) {
-                return createToken(TokenType.EOF, "EOF");
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                return null;
+                return createToken(TokenType.EOF, EOF_LEXEME);
             }
         }
 
@@ -74,43 +73,70 @@ public class LexicalAnalyzer {
             case TOKEN_ARITHMETIC_DIVIDE:
                 return createToken(TokenType.ARIT_MD, lexeme);
 
+            // @TODO: Mover para parser
             case TOKEN_ASSIGNMENT:
                 return isAssign(fileLoader);
 
+            // @TODO: Mover para Parser
             case TOKEN_RELATIONAL_OPERATION:
                 return isRelop(fileLoader);
 
+            // @TODO: Mover para Parser
             case TOKEN_QUOTE:
                 return isLiteral(fileLoader);
 
             default:
                 if (Character.isDigit(character)) {
-                    return isDigit(fileLoader, character);
+                    return useParser(ParserNames.NUMERIC, fileLoader);
                 }
                 else if (Character.isLetter(character)) {
                     return isLetter(fileLoader, character);
                 }
 
-                return null;
+                return getErrorToken(lexeme);
         }
     }
 
+    private Token useParser(String parserName, FileLoader fileLoader) throws IOException {
+        fileLoader.resetLastChar();
+
+        return AbstractParserFactory
+                .getByName(parserName)
+                .parse(fileLoader);
+    }
+
     private Token createToken(TokenType tokenType, String lexeme) {
-        return new Token(tokenType, lexeme, fileLoader.getColumn(), fileLoader.getLine());
+        return new TokenBuilder()
+                .setTokenType(tokenType)
+                .setCursorLocation(fileLoader)
+                .setLexeme(lexeme)
+                .build();
     }
 
+    private Token getErrorToken(String lexeme) {
+        // @TODO: Remover essa porquice (side-effect)
+        ErrorHandler.getInstance().addError("Unexpected token: " + lexeme);
+
+        return createToken(TokenType.ERROR, lexeme);
+    }
+
+    private Token getErrorToken() {
+        return createToken(TokenType.ERROR, "");
+    }
+
+    // @TODO: Implementar metodo
+    // @TODO: Mover para parser
     private Token isRelop(FileLoader fileLoader) {
-        return null;
+        return getErrorToken("$");
     }
 
-    private Token isDigit(FileLoader fileLoader, char c) {
-        return null;
-    }
-
+    // @TODO: Implementar metodo
+    // @TODO: Mover para parser
     private Token isLetter(FileLoader fileLoader, char c) {
-        return null;
+        return getErrorToken(String.valueOf(c));
     }
 
+    // @Todo: Mover para parser
     private Token isLiteral(FileLoader fileLoader) {
         char character;
         StringBuilder lexeme = new StringBuilder();
@@ -123,17 +149,18 @@ public class LexicalAnalyzer {
             do {
                 character = fileLoader.getNextChar();
                 lexeme.append(character);
-            } while (character != TOKEN_QUOTE);
-
+            }
+            while (character != TOKEN_QUOTE);
         }
         catch (Exception e){
             e.printStackTrace();
-            // retorna erro
+            return getErrorToken(lexeme.toString());
         }
 
         return createToken(TokenType.LITERAL, lexeme.toString());
     }
 
+    // @TODO: Mover para parser
     private Token isAssign(FileLoader fileLoader) {
         try {
             char character = fileLoader.getNextChar();
@@ -141,14 +168,11 @@ public class LexicalAnalyzer {
             if (character == TOKEN_DASH) {
                 return createToken(TokenType.ASSIGN, "<-");
             }
-            else {
-                // retornar erro
-            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null; // remover após o erro
+        return getErrorToken("<");
     }
 }

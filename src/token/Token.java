@@ -6,7 +6,7 @@ public class Token {
     private long col;
     private long line;
 
-    public Token(TokenType tokenType, String lexeme, long col, long line) {
+    Token(TokenType tokenType, String lexeme, long col, long line) {
         this.setTokenType(tokenType);
         this.setLexeme(lexeme);
         this.setCol(col);

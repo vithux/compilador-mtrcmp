@@ -4,15 +4,18 @@ import lexical.LexicalAnalyzer;
 import token.Token;
 import token.TokenType;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class SyntacticAnalyser {
 
     private final LexicalAnalyzer lexicalAnalyzer;
 
-    public SyntacticAnalyser(String filePath) {
+    public SyntacticAnalyser(String filePath) throws FileNotFoundException {
         this.lexicalAnalyzer = new LexicalAnalyzer(filePath);
     }
 
-    public void process() {
+    public void process() throws IOException {
         Token token;
 
         do {
