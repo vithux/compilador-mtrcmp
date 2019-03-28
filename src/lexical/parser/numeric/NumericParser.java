@@ -15,38 +15,33 @@ public class NumericParser implements Parser {
 
     @Override
     public Token parse(FileLoader fileLoader) throws IOException {
-        String errorMessage;
-
         StringBuilder lexeme = new StringBuilder();
         FiniteStateMachine stateMachine = NumberParserStateMachine.getInstance();
 
+        char currentChar = ' ';
+
         while (true) {
             try {
-                char token = fileLoader.getNextChar();
+                currentChar = fileLoader.getNextChar();
 
-                stateMachine = stateMachine.consumeToken(token);
-                lexeme.append(token);
+                stateMachine = stateMachine.consumeToken(currentChar);
+                lexeme.append(currentChar);
             }
             catch (IllegalArgumentException e) {
-                errorMessage = e.getMessage();
-                fileLoader.resetLastChar();
                 break;
             }
             catch (EOFException e) {
-                errorMessage = "Unexpected end of file";
-                fileLoader.resetLastChar();
-                break;
+                return new TokenBuilder()
+                        .setTokenType(TokenType.EOF)
+                        .setLexeme("EOF")
+                        .setCursorLocation(fileLoader)
+                        .build();
             }
         }
 
         if (!stateMachine.isFinal()) {
-            ErrorHandler.getInstance().addError(errorMessage);
-
-            return new TokenBuilder()
-                    .setTokenType(TokenType.ERROR)
-                    .setCursorLocation(fileLoader)
-                    .setLexeme(lexeme)
-                    .build();
+            noticeError(lexeme.toString(), currentChar);
+            return null;
         }
 
         NumericType numericType = NumberParserStateMachine.getNumericTypeFromFinalState(stateMachine);
@@ -56,5 +51,11 @@ public class NumericParser implements Parser {
                 .setCursorLocation(fileLoader)
                 .setLexeme(lexeme)
                 .build();
+    }
+
+    void noticeError(String lexeme, char illegalCharacter) {
+        String errorMessage = String.format("Illegal character %c encountered in: %s", illegalCharacter, lexeme);
+
+        ErrorHandler.getInstance().addError(errorMessage);
     }
 }

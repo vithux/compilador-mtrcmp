@@ -31,6 +31,8 @@ public final class ErrorHandler {
         }
 
         stringBuilder.append(stringJoiner.toString());
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append(System.lineSeparator());
 
         return stringBuilder.toString();
     }
