@@ -137,7 +137,7 @@ public class LexicalAnalyzer {
     }
 
     // @Todo: Mover para parser
-    private Token isLiteral(FileLoader fileLoader) {
+    private Token isLiteral(FileLoader fileLoader) throws Exception {
         char character;
         StringBuilder lexeme = new StringBuilder();
 
@@ -152,7 +152,9 @@ public class LexicalAnalyzer {
             }
             while (character != TOKEN_QUOTE);
         }
-        catch (Exception e){
+        catch (EOFException e){
+            throw new Exception("Expected token \" on lexeme " + lexeme + " at line " + fileLoader.getLine() +", column " + fileLoader.getColumn());
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }

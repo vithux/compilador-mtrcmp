@@ -57,6 +57,6 @@ public class NumericParser implements Parser {
     void noticeError(String lexeme, char illegalCharacter,FileLoader fileLoader) {
         String errorMessage = String.format("Illegal character %c encountered in: %s at line %d, column %d", illegalCharacter, lexeme, fileLoader.getLine(), fileLoader.getColumn());
 
-        ErrorHandler.getInstance().addError(errorMessage);x
+        ErrorHandler.getInstance().addError(errorMessage);
     }
 }
