@@ -99,7 +99,7 @@ public class LexicalAnalyzer {
                     return isLetter(fileLoader, character);
                 }
                 else {
-                    throw new Exception("Unexpected token: " + character);
+                    throw new Exception("Unexpected token: " + character + " at line " + fileLoader.getLine() +", column " + fileLoader.getColumn());
                 }
         }
     }

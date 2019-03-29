@@ -40,22 +40,23 @@ public class NumericParser implements Parser {
         }
 
         if (!stateMachine.isFinal()) {
-            noticeError(lexeme.toString(), currentChar);
+            noticeError(lexeme.toString(), currentChar, fileLoader);
             return null;
         }
 
         NumericType numericType = NumberParserStateMachine.getNumericTypeFromFinalState(stateMachine);
         TokenBuilder tokenBuilder = NumericTokenBuilderFactory.get(numericType);
 
+        fileLoader.resetLastChar();
         return tokenBuilder
                 .setCursorLocation(fileLoader)
                 .setLexeme(lexeme)
                 .build();
     }
 
-    void noticeError(String lexeme, char illegalCharacter) {
-        String errorMessage = String.format("Illegal character %c encountered in: %s", illegalCharacter, lexeme);
+    void noticeError(String lexeme, char illegalCharacter,FileLoader fileLoader) {
+        String errorMessage = String.format("Illegal character %c encountered in: %s at line %d, column %d", illegalCharacter, lexeme, fileLoader.getLine(), fileLoader.getColumn());
 
-        ErrorHandler.getInstance().addError(errorMessage);
+        ErrorHandler.getInstance().addError(errorMessage);x
     }
 }
