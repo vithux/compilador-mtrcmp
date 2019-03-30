@@ -1,5 +1,6 @@
 package lexical.parser;
 
+import lexical.parser.literal.LiteralParser;
 import lexical.parser.numeric.NumericParser;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class AbstractParserFactory {
 
     static {
         PARSERS.put(ParserNames.NUMERIC, new NumericParser());
+        PARSERS.put(ParserNames.LITERAL, new LiteralParser());
     }
 
     public static Parser getByName(String parserName) {
