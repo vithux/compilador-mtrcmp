@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import static utils.Constants.*;
 
-// @TODO: Padronizar estrutura de erros
 public class LexicalAnalyzer {
     private static final String EOF_LEXEME = "EOF";
 
@@ -67,7 +66,6 @@ public class LexicalAnalyzer {
             case TOKEN_ARITHMETIC_DIVIDE:
                 return createToken(TokenType.ARIT_MD, character);
 
-            // @TODO: Mover para parser
             case TOKEN_ASSIGNMENT:
                 return useParser(ParserNames.ASSIGN);
 
@@ -75,7 +73,9 @@ public class LexicalAnalyzer {
             case TOKEN_RELATIONAL_OPERATION:
                 return isRelop(fileLoader);
 
-            // @TODO: Mover para Parser
+            case TOKEN_COMMENT:
+                return isComment(fileLoader);
+
             case TOKEN_QUOTE:
                 return useParser(ParserNames.LITERAL);
 
@@ -113,6 +113,12 @@ public class LexicalAnalyzer {
     // @TODO: Implementar metodo
     // @TODO: Mover para parser
     private Token isRelop(FileLoader fileLoader) {
+        return null;
+    }
+
+    // @TODO: Implementar metodo
+    // @TODO: Mover para parser
+    private Token isComment(FileLoader fileLoader) {
         return null;
     }
 
