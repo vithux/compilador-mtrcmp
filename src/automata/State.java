@@ -24,7 +24,7 @@ public class State {
             }
         }
 
-        throw new IllegalArgumentException("Unexpected token: " + token);
+        throw new IllegalArgumentException();
     }
 
     public boolean isFinal() {

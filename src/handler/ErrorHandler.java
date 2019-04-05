@@ -8,15 +8,44 @@ public final class ErrorHandler {
     private static ErrorHandler instance;
     private List<String> listError;
 
-    private ErrorHandler(){
+    private ErrorHandler() {
         listError = new ArrayList<>();
     }
 
-    public void addError(String err){
+    public void addError(String err) {
         listError.add(err);
     }
 
-    public String errorReport(){
+    public void addError(ErrorType errorType, String lexeme, Character character, Long line, Long column) {
+
+        StringBuilder error = new StringBuilder();
+
+        switch (errorType) {
+            case UNEXPECTED_TOKEN:
+                error.append("Unexpected token: ")
+                        .append(character)
+                        .append(" at line ")
+                        .append(line)
+                        .append(", column ")
+                        .append(column);
+                break;
+
+            case ILLEGAL_CHARACTER:
+                error.append("Illegal character ")
+                        .append(character)
+                        .append(" encountered in: ")
+                        .append(lexeme)
+                        .append(" at line ")
+                        .append(line)
+                        .append(", column ")
+                        .append(column);
+                break;
+        }
+
+        listError.add(error.toString());
+    }
+
+    public String errorReport() {
         StringBuilder stringBuilder = new StringBuilder();
         StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
 
@@ -37,8 +66,8 @@ public final class ErrorHandler {
         return stringBuilder.toString();
     }
 
-    public static ErrorHandler getInstance(){
-        if (instance == null){
+    public static ErrorHandler getInstance() {
+        if (instance == null) {
             instance = new ErrorHandler();
         }
 

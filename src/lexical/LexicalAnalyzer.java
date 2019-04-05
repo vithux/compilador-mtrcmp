@@ -1,6 +1,7 @@
 package lexical;
 
 import handler.ErrorHandler;
+import handler.ErrorType;
 import lexical.parser.AbstractParserFactory;
 import lexical.parser.ParserNames;
 import loader.FileLoader;
@@ -38,7 +39,7 @@ public class LexicalAnalyzer {
                             return token;
                         }
                     } catch (Exception e) {
-                        ErrorHandler.getInstance().addError(e.getMessage());
+                        ErrorHandler.getInstance().addError(ErrorType.UNEXPECTED_TOKEN,null,character,fileLoader.getLine(),fileLoader.getColumn());
                     }
                 }
             } catch (EOFException e) {
@@ -68,7 +69,7 @@ public class LexicalAnalyzer {
 
             // @TODO: Mover para parser
             case TOKEN_ASSIGNMENT:
-                return isAssign(fileLoader);
+                return useParser(ParserNames.ASSIGN);
 
             // @TODO: Mover para Parser
             case TOKEN_RELATIONAL_OPERATION:
@@ -84,7 +85,7 @@ public class LexicalAnalyzer {
                 } else if (Character.isLetter(character)) {
                     return isLetter(fileLoader, character);
                 } else {
-                    throw new Exception("Unexpected token: " + character + " at line " + fileLoader.getLine() + ", column " + fileLoader.getColumn());
+                    throw new Exception(""+character);
                 }
         }
     }
@@ -118,21 +119,6 @@ public class LexicalAnalyzer {
     // @TODO: Implementar metodo
     // @TODO: Mover para parser
     private Token isLetter(FileLoader fileLoader, char c) {
-        return null;
-    }
-
-    // @TODO: Mover para parser
-    private Token isAssign(FileLoader fileLoader) {
-        try {
-            char character = fileLoader.getNextChar();
-
-            if (character == TOKEN_DASH) {
-                return createToken(TokenType.ASSIGN, "<-");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return null;
     }
 }

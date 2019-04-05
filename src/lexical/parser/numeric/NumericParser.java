@@ -2,6 +2,7 @@ package lexical.parser.numeric;
 
 import automata.FiniteStateMachine;
 import handler.ErrorHandler;
+import handler.ErrorType;
 import lexical.parser.Parser;
 import loader.FileLoader;
 import token.Token;
@@ -26,11 +27,9 @@ public class NumericParser implements Parser {
 
                 stateMachine = stateMachine.consumeToken(currentChar);
                 lexeme.append(currentChar);
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 break;
-            }
-            catch (EOFException e) {
+            } catch (EOFException e) {
                 return new TokenBuilder()
                         .setTokenType(TokenType.EOF)
                         .setLexeme("EOF")
@@ -54,9 +53,8 @@ public class NumericParser implements Parser {
                 .build();
     }
 
-    void noticeError(String lexeme, char illegalCharacter,FileLoader fileLoader) {
-        String errorMessage = String.format("Illegal character %c encountered in: %s at line %d, column %d", illegalCharacter, lexeme, fileLoader.getLine(), fileLoader.getColumn());
-
-        ErrorHandler.getInstance().addError(errorMessage);
+    void noticeError(String lexeme, char illegalCharacter, FileLoader fileLoader) {
+        ErrorHandler.getInstance()
+                .addError(ErrorType.ILLEGAL_CHARACTER, lexeme, illegalCharacter, fileLoader.getLine(), fileLoader.getColumn());
     }
 }
