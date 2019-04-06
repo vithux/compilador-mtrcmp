@@ -4,6 +4,7 @@ import lexical.parser.assign.AssignParser;
 import lexical.parser.comment.CommentParser;
 import lexical.parser.literal.LiteralParser;
 import lexical.parser.numeric.NumericParser;
+import lexical.parser.relop.RelopParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class AbstractParserFactory {
     private static final Map<String, Parser> PARSERS = new HashMap<>();
 
     static {
+        PARSERS.put(ParserNames.RELOP, new RelopParser());
         PARSERS.put(ParserNames.NUMERIC, new NumericParser());
         PARSERS.put(ParserNames.LITERAL, new LiteralParser());
         PARSERS.put(ParserNames.ASSIGN, new AssignParser());

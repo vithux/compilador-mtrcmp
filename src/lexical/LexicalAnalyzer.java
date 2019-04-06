@@ -3,6 +3,7 @@ package lexical;
 import handler.ErrorHandler;
 import handler.ErrorType;
 import lexical.parser.AbstractParserFactory;
+import lexical.parser.Parser;
 import lexical.parser.ParserNames;
 import loader.FileLoader;
 import token.Token;
@@ -72,7 +73,7 @@ public class LexicalAnalyzer {
 
             // @TODO: Mover para Parser
             case TOKEN_RELATIONAL_OPERATION:
-                return isRelop(fileLoader);
+                return useParser(ParserNames.RELOP);
 
             case TOKEN_COMMENT_START:
                 return useParser(ParserNames.COMMENT);
