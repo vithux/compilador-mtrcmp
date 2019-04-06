@@ -12,6 +12,7 @@ public class Constants {
     public static final char TOKEN_RELATIONAL_OPERATION = '$';
     public static final char TOKEN_COMMENT_START = '{';
     public static final char TOKEN_COMMENT_END = '}';
+    public static final char TOKEN_HASH = '#';
     public static final char TOKEN_QUOTE = '"';
     public static final char TOKEN_DASH = '-';
     public static final String ASSIGN_LEXEME = "<-";
