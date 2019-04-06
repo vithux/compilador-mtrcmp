@@ -13,10 +13,7 @@ import java.io.IOException;
 
 import static utils.Constants.*;
 
-/*
-* {1}
-* */
-// @TODO: Implementar metodo
+
 public class CommentParser implements Parser {
 
     @Override

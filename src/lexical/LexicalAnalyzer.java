@@ -71,7 +71,6 @@ public class LexicalAnalyzer {
             case TOKEN_ASSIGNMENT:
                 return useParser(ParserNames.ASSIGN);
 
-            // @TODO: Mover para Parser
             case TOKEN_RELATIONAL_OPERATION:
                 return useParser(ParserNames.RELOP);
 
@@ -110,12 +109,6 @@ public class LexicalAnalyzer {
                 .setCursorLocation(fileLoader)
                 .setLexeme(lexeme)
                 .build();
-    }
-
-    // @TODO: Implementar metodo
-    // @TODO: Mover para parser
-    private Token isRelop(FileLoader fileLoader) {
-        return null;
     }
 
     // @TODO: Implementar metodo
