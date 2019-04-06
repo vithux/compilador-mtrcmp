@@ -40,6 +40,16 @@ public final class ErrorHandler {
                         .append(", column ")
                         .append(column);
                 break;
+
+            case EXPECTED_TOKEN:
+                error.append("Expected token ")
+                        .append(character)
+                        .append(" on lexeme ")
+                        .append(lexeme)
+                        .append(" at line ")
+                        .append(line)
+                        .append(", column ")
+                        .append(column);
         }
 
         listError.add(error.toString());

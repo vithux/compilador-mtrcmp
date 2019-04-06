@@ -10,6 +10,7 @@ import token.TokenBuilder;
 import token.TokenType;
 import utils.Constants;
 
+import javax.management.StringValueExp;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,8 +74,8 @@ public class LexicalAnalyzer {
             case TOKEN_RELATIONAL_OPERATION:
                 return isRelop(fileLoader);
 
-            case TOKEN_COMMENT:
-                return isComment(fileLoader);
+            case TOKEN_COMMENT_START:
+                return useParser(ParserNames.COMMENT);
 
             case TOKEN_QUOTE:
                 return useParser(ParserNames.LITERAL);
@@ -85,7 +86,7 @@ public class LexicalAnalyzer {
                 } else if (Character.isLetter(character)) {
                     return isLetter(fileLoader, character);
                 } else {
-                    throw new Exception(""+character);
+                    throw new Exception(String.valueOf(character));
                 }
         }
     }
@@ -113,12 +114,6 @@ public class LexicalAnalyzer {
     // @TODO: Implementar metodo
     // @TODO: Mover para parser
     private Token isRelop(FileLoader fileLoader) {
-        return null;
-    }
-
-    // @TODO: Implementar metodo
-    // @TODO: Mover para parser
-    private Token isComment(FileLoader fileLoader) {
         return null;
     }
 

@@ -1,4 +1,4 @@
-package lexical.parser.literal;
+package lexical.parser.comment;
 
 import handler.ErrorHandler;
 import handler.ErrorType;
@@ -11,9 +11,10 @@ import token.TokenType;
 import java.io.EOFException;
 import java.io.IOException;
 
-import static utils.Constants.TOKEN_QUOTE;
+import static utils.Constants.TOKEN_COMMENT_END;
 
-public class LiteralParser implements Parser {
+// @TODO: Implementar metodo
+public class CommentParser implements Parser {
 
     @Override
     public Token parse(FileLoader fileLoader) {
@@ -29,7 +30,7 @@ public class LiteralParser implements Parser {
                 character = fileLoader.getNextChar();
                 lexeme.append(character);
             }
-            while (character != TOKEN_QUOTE);
+            while (character != TOKEN_COMMENT_END);
         } catch (EOFException e) {
             noticeError(lexeme, fileLoader);
         } catch (IOException e) {
@@ -37,16 +38,12 @@ public class LiteralParser implements Parser {
             return null;
         }
 
-        return new TokenBuilder()
-                .setTokenType(TokenType.LITERAL)
-                .setCursorLocation(fileLoader)
-                .setLexeme(lexeme)
-                .build();
+        return null;
     }
 
     void noticeError(StringBuilder lexeme, FileLoader fileLoader) {
         ErrorHandler.getInstance()
-                .addError(ErrorType.EXPECTED_TOKEN, lexeme.toString(), TOKEN_QUOTE, fileLoader.getLine(), fileLoader.getColumn());
+                .addError(ErrorType.EXPECTED_TOKEN, lexeme.toString(), TOKEN_COMMENT_END, fileLoader.getLine(), fileLoader.getColumn());
     }
 
 }
