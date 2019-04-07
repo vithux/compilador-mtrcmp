@@ -16,12 +16,10 @@ public class LiteralParser implements Parser {
 
     @Override
     public Token parse(FileLoader fileLoader) throws IOException, ExpectedTokenException {
-        char character;
         StringBuilder lexeme = new StringBuilder();
 
         try {
-            fileLoader.resetLastChar();
-            character = fileLoader.getNextChar();
+            char character = fileLoader.getNextChar();
             lexeme.append(character);
 
             do {
@@ -29,15 +27,11 @@ public class LiteralParser implements Parser {
                 lexeme.append(character);
             }
             while (character != TOKEN_QUOTE);
+
+            return new TokenBuilder().setLexeme(lexeme).setTokenType(TokenType.LITERAL).withCursorLocation(fileLoader);
         }
         catch (EOFException e) {
             throw new ExpectedTokenException(TOKEN_QUOTE, lexeme.toString(), fileLoader.getLine(), fileLoader.getColumn());
         }
-
-        return new TokenBuilder()
-                .setTokenType(TokenType.LITERAL)
-                .setCursorLocation(fileLoader)
-                .setLexeme(lexeme)
-                .build();
     }
 }
