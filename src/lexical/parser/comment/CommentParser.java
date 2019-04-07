@@ -10,10 +10,6 @@ import java.io.IOException;
 
 import static utils.Constants.*;
 
-/*
-* {1}
-* */
-// @TODO: Implementar metodo
 public class CommentParser implements Parser {
 
     @Override
@@ -44,7 +40,8 @@ public class CommentParser implements Parser {
                             end = true;
                         }
                     }
-                } while (!end);
+                }
+                while (!end);
             }
             else {
                 throw new ExpectedTokenException(TOKEN_HASH, lexeme.toString(), fileLoader.getLine(), fileLoader.getColumn());
