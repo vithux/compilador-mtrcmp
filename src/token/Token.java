@@ -1,15 +1,16 @@
 package token;
 
 public class Token {
+
     private TokenType tokenType;
     private String lexeme;
-    private long col;
+    private long column;
     private long line;
 
-    Token(TokenType tokenType, String lexeme, long col, long line) {
+    public Token(TokenType tokenType, String lexeme, long column, long line) {
         this.setTokenType(tokenType);
         this.setLexeme(lexeme);
-        this.setCol(col);
+        this.setColumn(column);
         this.setLine(line);
     }
 
@@ -29,12 +30,12 @@ public class Token {
         this.lexeme = lexeme;
     }
 
-    public long getCol() {
-        return col;
+    public long getColumn() {
+        return column;
     }
 
-    public void setCol(long col) {
-        this.col = col;
+    public void setColumn(long column) {
+        this.column = column;
     }
 
     public long getLine() {
@@ -51,7 +52,7 @@ public class Token {
 
         sb.append("tokenType=").append(tokenType);
         sb.append(", lexeme='").append(lexeme).append('\'');
-        sb.append(", col=").append(col);
+        sb.append(", column=").append(column);
         sb.append(", line=").append(line);
         sb.append('}');
 

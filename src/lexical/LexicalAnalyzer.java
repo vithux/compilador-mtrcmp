@@ -1,17 +1,20 @@
 package lexical;
 
-import handler.ErrorHandler;
-import handler.ErrorType;
+import error.DuplicatedIdentifierError;
+import error.ExpectedTokenError;
+import error.IllegalTokenError;
+import error.UnexpectedTokenError;
+import error.handler.ErrorHandler;
+import exceptions.*;
 import lexical.parser.AbstractParserFactory;
-import lexical.parser.Parser;
 import lexical.parser.ParserNames;
 import loader.FileLoader;
+import symbol.SymbolTable;
 import token.Token;
 import token.TokenBuilder;
 import token.TokenType;
-import utils.Constants;
+import token.builders.EOFTokenBuilder;
 
-import javax.management.StringValueExp;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,7 +22,6 @@ import java.io.IOException;
 import static utils.Constants.*;
 
 public class LexicalAnalyzer {
-    private static final String EOF_LEXEME = "EOF";
 
     private FileLoader fileLoader;
 
@@ -39,19 +41,21 @@ public class LexicalAnalyzer {
                         if (token != null) {
                             return token;
                         }
-                    } catch (Exception e) {
-                        ErrorHandler.getInstance().addError(ErrorType.UNEXPECTED_TOKEN,null,character,fileLoader.getLine(),fileLoader.getColumn());
+                    }
+                    catch (UnexpectedTokenException e) {
+                        ErrorHandler.getInstance().addError(UnexpectedTokenError.from(e));
                     }
                 }
-            } catch (EOFException e) {
-                return createToken(TokenType.EOF, EOF_LEXEME);
+            }
+            catch (EOFException e) {
+                return new EOFTokenBuilder().withCursorLocation(fileLoader);
             }
         }
     }
 
-    private Token getToken(char character) throws Exception {
+    private Token getToken(char character) throws UnexpectedTokenException, IOException {
         switch (character) {
-            case Constants.TOKEN_TERMINATOR:
+            case TOKEN_TERMINATOR:
                 return createToken(TokenType.TERM, character);
 
             case TOKEN_RIGHT_PARENTHESIS:
@@ -83,20 +87,43 @@ public class LexicalAnalyzer {
             default:
                 if (Character.isDigit(character)) {
                     return useParser(ParserNames.NUMERIC);
-                } else if (Character.isLetter(character)) {
-                    return isLetter(fileLoader, character);
-                } else {
-                    throw new Exception(String.valueOf(character));
                 }
+
+                if (Character.isLetter(character)) {
+                    return useParser(ParserNames.IDENTIFIER);
+                }
+
+                throw new UnexpectedTokenException(character, fileLoader.getLine(), fileLoader.getColumn());
         }
     }
 
     private Token useParser(String parserName) throws IOException {
         fileLoader.resetLastChar();
 
-        return AbstractParserFactory
-                .getByName(parserName)
-                .parse(fileLoader);
+        try {
+            return AbstractParserFactory.getByName(parserName).parse(fileLoader);
+        }
+        catch (IllegalTokenException e) {
+            ErrorHandler.getInstance().addError(IllegalTokenError.from(e));
+            return null;
+        }
+        catch (ExpectedTokenException e) {
+            ErrorHandler.getInstance().addError(ExpectedTokenError.from(e));
+            return null;
+        }
+        catch (DuplicatedIdentifierException e) {
+            ErrorHandler.getInstance().addError(DuplicatedIdentifierError.from(e));
+            return null;
+        }
+        catch (ReservedIdentifierException e) {
+            return SymbolTable
+                    .getInstance()
+                    .getSymbol(e.getIdentifier())
+                    .getToken()
+                    .setLine(e.getLine())
+                    .setColumn(e.getColumn() - e.getIdentifier().length())
+                    .build();
+        }
     }
 
     private Token createToken(TokenType tokenType, char lexeme) {
@@ -104,16 +131,6 @@ public class LexicalAnalyzer {
     }
 
     private Token createToken(TokenType tokenType, String lexeme) {
-        return new TokenBuilder()
-                .setTokenType(tokenType)
-                .setCursorLocation(fileLoader)
-                .setLexeme(lexeme)
-                .build();
-    }
-
-    // @TODO: Implementar metodo
-    // @TODO: Mover para parser
-    private Token isLetter(FileLoader fileLoader, char c) {
-        return null;
+        return new TokenBuilder().setTokenType(tokenType).setLexeme(lexeme).withCursorLocation(fileLoader);
     }
 }

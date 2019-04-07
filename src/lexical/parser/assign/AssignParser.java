@@ -1,43 +1,37 @@
 package lexical.parser.assign;
 
-import handler.ErrorHandler;
-import handler.ErrorType;
+import exceptions.ExpectedTokenException;
 import lexical.parser.Parser;
 import loader.FileLoader;
+import token.builders.AssignTokenBuilder;
 import token.Token;
-import token.TokenBuilder;
-import token.TokenType;
 
-import static utils.Constants.*;
+import java.io.IOException;
+
+import static utils.Constants.TOKEN_ASSIGNMENT;
+import static utils.Constants.TOKEN_DASH;
 
 public class AssignParser implements Parser {
 
     @Override
-    public Token parse(FileLoader fileLoader) {
-        try {
-            char character = fileLoader.getNextChar();
+    public Token parse(FileLoader fileLoader) throws IOException, ExpectedTokenException {
+        char character = fileLoader.getNextChar();
 
-            switch (character) {
-                case TOKEN_ASSIGNMENT:
-                    character = fileLoader.getNextChar();
-                    if (character == TOKEN_DASH) {
-                        return new TokenBuilder()
-                                .setTokenType(TokenType.ASSIGN)
-                                .setCursorLocation(fileLoader)
-                                .setLexeme(ASSIGN_LEXEME)
-                                .build();
-                    } else {
-                        ErrorHandler.getInstance()
-                                .addError(ErrorType.UNEXPECTED_TOKEN, "<", character, fileLoader.getLine(), fileLoader.getColumn());
-                    }
+        if (character == TOKEN_ASSIGNMENT) {
+            character = fileLoader.getNextChar();
 
-                default:
-                    return null;
-
+            if (character == TOKEN_DASH) {
+                return new AssignTokenBuilder().withCursorLocation(fileLoader);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+
+            throw new ExpectedTokenException(
+                    character,
+                    Character.toString(TOKEN_ASSIGNMENT),
+                    fileLoader.getLine(),
+                    fileLoader.getColumn()
+            );
         }
+
+        return null;
     }
 }

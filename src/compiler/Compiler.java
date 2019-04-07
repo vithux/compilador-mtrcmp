@@ -1,6 +1,7 @@
 package compiler;
 
-import handler.ErrorHandler;
+import error.handler.ErrorHandler;
+import symbol.SymbolTable;
 import syntactic.SyntacticAnalyser;
 
 import java.io.IOException;
@@ -24,5 +25,6 @@ public class Compiler {
         }
 
         System.out.println(ErrorHandler.getInstance().errorReport());
+        System.out.println(SymbolTable.getInstance().getReport());
     }
 }

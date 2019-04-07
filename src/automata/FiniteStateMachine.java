@@ -1,5 +1,7 @@
 package automata;
 
+import exceptions.NoSuchTransitionException;
+
 // https://github.com/eugenp/tutorials/blob/master/algorithms-miscellaneous-1/src/main/java/com/baeldung/algorithms/automata/FiniteStateMachine.java
 public class FiniteStateMachine {
 
@@ -9,7 +11,7 @@ public class FiniteStateMachine {
         this.state = state;
     }
 
-    public FiniteStateMachine consumeToken(char token) throws IllegalArgumentException {
+    public FiniteStateMachine consumeToken(char token) throws NoSuchTransitionException {
         return new FiniteStateMachine(this.state.makeTransition(token));
     }
 

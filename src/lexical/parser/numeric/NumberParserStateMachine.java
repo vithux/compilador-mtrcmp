@@ -1,15 +1,11 @@
 package lexical.parser.numeric;
 
-import automata.FinalState;
 import automata.FiniteStateMachine;
 import automata.State;
 import automata.Transition;
-
-import java.util.ArrayList;
+import automata.helpers.AcceptNumbersState;
 
 class NumberParserStateMachine {
-
-    private static final int NUMBERS_ASCII_TABLE_OFFSET = 48;
 
     private static final char FLOAT_SEPARATOR = '.';
     private static final char EXPONENTIATION_PLUS_SIGN = '+';
@@ -37,18 +33,18 @@ class NumberParserStateMachine {
         FLOAT_BASE_TEN_EXPONENTIATION_STATE = new State();
         INTEGER_BASE_TEN_EXPONENTIATION_STATE = new State();
 
-        FLOAT_SCIENTIFIC_NOTATION_STATE = numberFinalState();
-        INTEGER_SCIENTIFIC_NOTATION_STATE = numberFinalState();
+        FLOAT_SCIENTIFIC_NOTATION_STATE = new AcceptNumbersState();
+        INTEGER_SCIENTIFIC_NOTATION_STATE = new AcceptNumbersState();
 
-        FLOAT_EXPONENTIATION_SIGN_STATE = stateWithNumberTransitions(FLOAT_SCIENTIFIC_NOTATION_STATE);
-        INTEGER_EXPONENTIATION_SIGN_STATE = stateWithNumberTransitions(INTEGER_SCIENTIFIC_NOTATION_STATE);
+        FLOAT_EXPONENTIATION_SIGN_STATE = new AcceptNumbersState(FLOAT_SCIENTIFIC_NOTATION_STATE);
+        INTEGER_EXPONENTIATION_SIGN_STATE = new AcceptNumbersState(INTEGER_SCIENTIFIC_NOTATION_STATE);
 
-        FLOAT_FINAL_STATE = numberFinalState();
-        FLOAT_START_STATE = stateWithNumberTransitions(FLOAT_FINAL_STATE);
+        FLOAT_FINAL_STATE = new AcceptNumbersState();
+        FLOAT_START_STATE = new AcceptNumbersState(FLOAT_FINAL_STATE);
 
-        INTEGER_FINAL_STATE = numberFinalState();
+        INTEGER_FINAL_STATE = new AcceptNumbersState();
 
-        INITIAL_STATE = stateWithNumberTransitions(INTEGER_FINAL_STATE);
+        INITIAL_STATE = new AcceptNumbersState(INTEGER_FINAL_STATE);
 
         // Transitions
 
@@ -62,36 +58,6 @@ class NumberParserStateMachine {
 
         INTEGER_BASE_TEN_EXPONENTIATION_STATE.addTransition(new Transition(EXPONENTIATION_PLUS_SIGN, INTEGER_EXPONENTIATION_SIGN_STATE));
         INTEGER_BASE_TEN_EXPONENTIATION_STATE.addTransition(new Transition(EXPONENTIATION_PLUS_SIGN, INTEGER_EXPONENTIATION_SIGN_STATE));
-    }
-
-    private static FinalState numberFinalState() {
-        FinalState state = new FinalState();
-
-        for (char rule : numberTransitionRules()) {
-            state.addTransition(new Transition(rule, state));
-        }
-
-        return state;
-    }
-
-    private static ArrayList<Character> numberTransitionRules() {
-        ArrayList<Character> transitions = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            transitions.add((char) (NUMBERS_ASCII_TABLE_OFFSET + i));
-        }
-
-        return transitions;
-    }
-
-    private static State stateWithNumberTransitions(State nextState) {
-        State state = new State();
-
-        for (char rule : numberTransitionRules()) {
-            state.addTransition(new Transition(rule, nextState));
-        }
-
-        return state;
     }
 
     private static Transition baseTenExponentiationTransition(State nextState) {

@@ -10,8 +10,6 @@ public class FileLoader extends BufferedReader {
     private long line;
     private long column;
     private long lastLineSize;
-
-    private char lineSeparatorStart;
     
     /**
      * Construtor que recebe nome do arquivo.
@@ -30,14 +28,8 @@ public class FileLoader extends BufferedReader {
     public FileLoader(File file) throws FileNotFoundException {
         super((new FileReader(file)));
         line = 1;
-        column = 0;
+        column = 1;
         lastLineSize = 0;
-
-        if (isCRLFLineEnding()) {
-            lineSeparatorStart = '\r';
-        } else {
-            lineSeparatorStart = '\n';
-        }
     }
     
     /**
@@ -49,21 +41,23 @@ public class FileLoader extends BufferedReader {
       */
     public char getNextChar() throws EOFException, IOException {
         this.mark(1);
+
         int charValue = this.read();
+        char character = (char) charValue;
+
         column++;
-
-        if (charValue == lineSeparatorStart) {
-            if (isCRLFLineEnding()) {
-                column++;
-            }
-
-            line++;
-            lastLineSize = column;
-            column = 0;
-        }
         
-        if (charValue == -1) throw new EOFException(); 
-        return (char) charValue; 
+        if (charValue == -1) {
+            throw new EOFException();
+        }
+
+        if (isLineEnding(character)) {
+            line++;
+            lastLineSize = column + lineSeparatorLength() - 1;
+            column = 1;
+        }
+
+        return character;
     }
     
     /**
@@ -93,7 +87,19 @@ public class FileLoader extends BufferedReader {
         return column;
     }
 
+    private static boolean isLineEnding(char character) {
+        if (isCRLFLineEnding()) {
+            return character == '\r';
+        }
+
+        return character == '\n';
+    }
+
+    private static int lineSeparatorLength() {
+        return System.lineSeparator().length();
+    }
+
     private static boolean isCRLFLineEnding() {
-        return System.lineSeparator().length() == 2;
+        return lineSeparatorLength() == 2;
     }
 }

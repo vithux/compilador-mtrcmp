@@ -11,10 +11,8 @@ public class TokenBuilder {
     @NotNull
     private String lexeme = "";
 
-    @NotNull
-    private long col = 0L;
+    private long column = 0L;
 
-    @NotNull
     private long line = 0L;
 
     public TokenBuilder setTokenType(TokenType tokenType) {
@@ -31,8 +29,8 @@ public class TokenBuilder {
         return setLexeme(lexeme.toString());
     }
 
-    public TokenBuilder setCol(long col) {
-        this.col = col;
+    public TokenBuilder setColumn(long column) {
+        this.column = column;
         return this;
     }
 
@@ -42,10 +40,14 @@ public class TokenBuilder {
     }
 
     public TokenBuilder setCursorLocation(FileLoader fileLoader) {
-        return setLine(fileLoader.getLine()).setCol(fileLoader.getColumn());
+        return setLine(fileLoader.getLine()).setColumn(fileLoader.getColumn());
+    }
+
+    public Token withCursorLocation(FileLoader fileLoader) {
+        return setCursorLocation(fileLoader).build();
     }
 
     public Token build() {
-        return new Token(tokenType, lexeme, col, line);
+        return new Token(tokenType, lexeme, column, line);
     }
 }

@@ -1,7 +1,6 @@
 package lexical.parser.literal;
 
-import handler.ErrorHandler;
-import handler.ErrorType;
+import exceptions.ExpectedTokenException;
 import lexical.parser.Parser;
 import loader.FileLoader;
 import token.Token;
@@ -16,7 +15,7 @@ import static utils.Constants.TOKEN_QUOTE;
 public class LiteralParser implements Parser {
 
     @Override
-    public Token parse(FileLoader fileLoader) {
+    public Token parse(FileLoader fileLoader) throws IOException, ExpectedTokenException {
         char character;
         StringBuilder lexeme = new StringBuilder();
 
@@ -30,11 +29,9 @@ public class LiteralParser implements Parser {
                 lexeme.append(character);
             }
             while (character != TOKEN_QUOTE);
-        } catch (EOFException e) {
-            noticeError(lexeme, fileLoader);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        }
+        catch (EOFException e) {
+            throw new ExpectedTokenException(TOKEN_QUOTE, lexeme.toString(), fileLoader.getLine(), fileLoader.getColumn());
         }
 
         return new TokenBuilder()
@@ -43,10 +40,4 @@ public class LiteralParser implements Parser {
                 .setLexeme(lexeme)
                 .build();
     }
-
-    void noticeError(StringBuilder lexeme, FileLoader fileLoader) {
-        ErrorHandler.getInstance()
-                .addError(ErrorType.EXPECTED_TOKEN, lexeme.toString(), TOKEN_QUOTE, fileLoader.getLine(), fileLoader.getColumn());
-    }
-
 }
