@@ -24,7 +24,7 @@ public class FiniteStateMachine {
      * Consome token, transicionando a máquina (se possivel) para o seu próximo estado.
      *
      * @param token - O token a ser consumido pela máquina.
-     * @return {FiniteStateMachine} Uma nova máquina a partir do resultado da transição possivel a partir do token dado.
+     * @return {FiniteStateMachine} Uma nova máquina a partir do resultado da transição.
      * @throws NoSuchTransitionException - Em transições não definidas
      */
     public FiniteStateMachine consumeToken(char token) throws NoSuchTransitionException {
