@@ -1,3 +1,9 @@
+/**
+ * @author Matheus Rogge Cocia de Oliveira
+ * @author Rafael Bená Cineis
+ * @author Vitor Rodrigues de Marques
+ * @author Vitor Augusto da Silva Brandão
+ */
 package automata;
 
 // Based on: https://github.com/eugenp/tutorials/blob/master/algorithms-miscellaneous-1/src/main/java/com/baeldung/algorithms/automata/RtTransition.java

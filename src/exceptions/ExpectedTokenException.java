@@ -1,3 +1,9 @@
+/**
+ * @author Matheus Rogge Cocia de Oliveira
+ * @author Rafael Bená Cineis
+ * @author Vitor Rodrigues de Marques
+ * @author Vitor Augusto da Silva Brandão
+ */
 package exceptions;
 
 public class ExpectedTokenException extends Exception {

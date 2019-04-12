@@ -1,4 +1,6 @@
 <- ( ) + - ; * / "VITOR"
+
+{# teste de relop #}
 $df $dd $eq $ew $lt $l4 $le $lr $gt $g? $ge $gq
 
 {#
@@ -15,13 +17,35 @@ hj
 
 abcaxi@
 
+{# teste de numeros #}
 1;
 12;
 1.2;
-12,3;
 12.34;
 1E+10;
 12E+10;
 12.3E+10;
 
-1.
+{# teste de palavra reservada #}
+true
+false
+and
+not
+or
+bool
+text
+int
+program
+end_prog
+begin
+end
+if
+then
+else
+for
+while
+declare
+to
+
+{# teste de variaveis #}
+banana
