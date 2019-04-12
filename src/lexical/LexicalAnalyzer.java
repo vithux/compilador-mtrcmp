@@ -35,6 +35,11 @@ public class LexicalAnalyzer {
         this.fileLoader = new FileLoader(fileName);
     }
 
+    /**
+     * Método que realiza a leitura do codigo fonte e retorna o proximo token.
+     *
+     * @return Token - Retorna um token valido.
+     */
     public Token nextToken() throws IOException {
         while (true) {
             try {
@@ -59,6 +64,11 @@ public class LexicalAnalyzer {
         }
     }
 
+    /**
+     * Método que realiza faz a idenficicação do token.
+     *
+     * @return Token - Retorna um token valido.
+     */
     private Token getToken(char character) throws UnexpectedTokenException, IOException {
         switch (character) {
             case TOKEN_TERMINATOR:

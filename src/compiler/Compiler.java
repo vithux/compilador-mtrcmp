@@ -14,6 +14,13 @@ import java.io.IOException;
 
 public class Compiler {
 
+
+    /**
+     * Método principal da aplicação que recebe o arquivo a ser compilado e inicia o processo
+     * do compilador.
+     *
+     * @param  args - Recebe o path do aquivo a ser compilado.
+     */
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Missing file name argument");
