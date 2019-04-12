@@ -1,7 +1,7 @@
 package automata;
 
 /**
- * Especialização de objeto para estados finais de máquinas de estado finitas.
+ * Especialização de objeto para estados finais de um autômato.
  *
  * @author Matheus Rogge Cocia de Oliveira
  * @author Rafael Bená Cineis
