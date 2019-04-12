@@ -22,12 +22,10 @@ public class Compiler {
      * @param  args - Recebe o path do aquivo a ser compilado.
      */
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.out.println("Missing file name argument");
-            return;
-        }
-
-        String fileName = args[0];
+        /*string define o nome do arquivo processado pelo compilador,
+          no nosso caso o exemple_input já possui um arquivo de teste com
+          as variações de tokens e alguns erros já tratados pelo sistema */
+        String fileName = "example_input";
 
         try {
             SyntacticAnalyser syntacticAnalyser = new SyntacticAnalyser(fileName);
