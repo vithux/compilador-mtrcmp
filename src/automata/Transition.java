@@ -1,12 +1,15 @@
+package automata;
+
 /**
+ * Abstração sobre transições entre estados de um autômato.
+ *
+ * Baseado em: https://github.com/eugenp/tutorials/blob/master/algorithms-miscellaneous-1/src/main/java/com/baeldung/algorithms/automata/RtTransition.java
+ *
  * @author Matheus Rogge Cocia de Oliveira
  * @author Rafael Bená Cineis
  * @author Vitor Rodrigues de Marques
  * @author Vitor Augusto da Silva Brandão
  */
-package automata;
-
-// Based on: https://github.com/eugenp/tutorials/blob/master/algorithms-miscellaneous-1/src/main/java/com/baeldung/algorithms/automata/RtTransition.java
 public class Transition {
 
     private char rule;
@@ -17,15 +20,22 @@ public class Transition {
         this.nextState = next;
     }
 
-    public State state() {
+    /**
+     * Retorna uma refêrencia ao próximo estado após a transição.
+     *
+     * @return {State} Proximo estado
+     */
+    public State getNextState() {
         return this.nextState;
     }
 
+    /**
+     * Verifica se a transição é possivel, baseada na regra de transição e o caractere (token) dado.
+     *
+     * @param token - Token de entrada
+     * @return {Boolean} Verdadeiro caso a transição entre estados seja possivel
+     */
     public boolean isPossible(char token) {
         return rule == token;
-    }
-
-    public char getRule() {
-        return rule;
     }
 }
