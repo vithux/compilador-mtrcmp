@@ -12,7 +12,4 @@ Projeto criado durante as aulas de compiladores na Metrocamp 2019.1
 
 Main Class Compiler.Java.
 
-Passar como parâmetro o path do example_input
-
-    >  main(args)
-   
+Passar na variável fileName o nome do arquivo a ser compilado.
