@@ -30,6 +30,7 @@ import static utils.Constants.*;
 public class LexicalAnalyzer {
 
     private FileLoader fileLoader;
+    private Token buffer;
 
     public LexicalAnalyzer(String fileName) throws FileNotFoundException {
         this.fileLoader = new FileLoader(fileName);
@@ -41,6 +42,13 @@ public class LexicalAnalyzer {
      * @return Token - Retorna um token valido.
      */
     public Token nextToken() throws IOException {
+
+        if (buffer != null){
+            Token returnBuffer = buffer;
+            buffer = null;
+            return returnBuffer;
+        }
+
         while (true) {
             try {
                 char character = fileLoader.getNextChar();
@@ -111,6 +119,10 @@ public class LexicalAnalyzer {
 
                 throw new UnexpectedTokenException(character, fileLoader.getLine(), fileLoader.getColumn());
         }
+    }
+
+    public void storeToken(Token t){
+        buffer = t;
     }
 
     private Token useParser(String parserName) throws IOException {
