@@ -6,7 +6,6 @@
  */
 package symbol;
 
-import token.Token;
 import token.TokenBuilder;
 
 import java.util.HashMap;
@@ -16,6 +15,8 @@ import java.util.StringJoiner;
 public final class SymbolTable {
 
     private final Map<String, Symbol> symbols;
+
+    private final Map<String, List<>>
 
     private static SymbolTable instance;
 
