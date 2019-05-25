@@ -20,7 +20,7 @@ public class Compiler {
      *
      * @param  args - Recebe o path do arquivo a ser compilado.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if (args.length == 0) {
             throw new IllegalArgumentException("File path is required");
         }
@@ -35,7 +35,7 @@ public class Compiler {
             e.printStackTrace();
         }
 
-        System.out.println(ErrorHandler.getInstance().errorReport());
+        System.out.println(ErrorHandler.getInstance().getReport());
         System.out.println(SymbolTable.getInstance().getReport());
     }
 }
