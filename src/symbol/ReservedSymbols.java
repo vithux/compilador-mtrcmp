@@ -6,7 +6,6 @@
  */
 package symbol;
 
-import token.Token;
 import token.TokenBuilder;
 import token.TokenType;
 import token.builders.LogicalOperationTokenBuilder;
