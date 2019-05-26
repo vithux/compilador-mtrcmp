@@ -8,9 +8,10 @@ package symbol;
 
 import token.TokenBuilder;
 import token.TokenType;
-import token.builders.LogicalOperationTokenBuilder;
-import token.builders.LogicalValueTokenBuilder;
+import token.builders.LogicalOperationTokenBuilderFactory;
+import token.builders.LogicalValueTokenBuilderFactory;
 import token.builders.TypeTokenBuilder;
+import utils.Constants;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,12 +36,12 @@ class ReservedSymbols {
         map.put(TokenType.PROGRAM, "program");
         map.put(TokenType.END_PROG, "end_prog");
 
-        for (String lexeme : Arrays.asList("true", "false")) {
-            symbols.put(lexeme, new Symbol(lexeme, SymbolType.KEYWORD, new LogicalValueTokenBuilder().setLexeme(lexeme)));
+        for (String lexeme : Arrays.asList(Constants.TRUE, Constants.FALSE)) {
+            symbols.put(lexeme, new Symbol(lexeme, SymbolType.KEYWORD, LogicalValueTokenBuilderFactory.getTokenBuilder(lexeme)));
         }
 
-        for (String lexeme : Arrays.asList("and", "not", "or")) {
-            symbols.put(lexeme, new Symbol(lexeme, SymbolType.KEYWORD, new LogicalOperationTokenBuilder().setLexeme(lexeme)));
+        for (String lexeme : Arrays.asList(Constants.AND, Constants.NOT, Constants.OR)) {
+            symbols.put(lexeme, new Symbol(lexeme, SymbolType.KEYWORD, LogicalOperationTokenBuilderFactory.getTokenBuilder(lexeme)));
         }
 
         for (String lexeme : Arrays.asList("bool", "text", "int", "float")) {

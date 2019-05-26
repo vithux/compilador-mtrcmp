@@ -9,12 +9,17 @@ package token.builders;
 import token.TokenBuilder;
 import token.TokenType;
 
-public class EOFTokenBuilder extends TokenBuilder {
+public class EOFTokenBuilderSingleton {
 
     private static final String EOF_LEXEME = "EOF";
 
-    public EOFTokenBuilder() {
-        this.setLexeme(EOF_LEXEME);
-        this.setTokenType(TokenType.EOF);
+    private static TokenBuilder instance;
+
+    public static TokenBuilder getInstance() {
+        if (instance == null) {
+            instance = new TokenBuilder().setTokenType(TokenType.EOF).setLexeme(EOF_LEXEME);
+        }
+
+        return instance;
     }
 }

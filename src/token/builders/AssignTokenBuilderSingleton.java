@@ -9,12 +9,17 @@ package token.builders;
 import token.TokenBuilder;
 import token.TokenType;
 
-public class AssignTokenBuilder extends TokenBuilder {
+public class AssignTokenBuilderSingleton {
 
     private static final String ASSIGN_LEXEME = "<-";
 
-    public AssignTokenBuilder() {
-        this.setTokenType(TokenType.ASSIGN);
-        this.setLexeme(ASSIGN_LEXEME);
+    private static TokenBuilder instance;
+
+    public static TokenBuilder getInstance() {
+        if (instance == null) {
+            instance = new TokenBuilder().setTokenType(TokenType.ASSIGN).setLexeme(ASSIGN_LEXEME);
+        }
+
+        return instance;
     }
 }

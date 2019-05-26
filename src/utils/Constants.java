@@ -7,6 +7,12 @@
 package utils;
 
 public class Constants {
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+    public static final String AND = "and";
+    public static final String NOT = "not";
+    public static final String OR = "or";
+
     public static final char TOKEN_TERMINATOR = ';';
     public static final char TOKEN_RIGHT_PARENTHESIS = ')';
     public static final char TOKEN_LEFT_PARENTHESIS = '(';

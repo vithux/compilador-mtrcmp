@@ -12,9 +12,9 @@ import token.TokenType;
 
 class NumericTokenBuilderFactory {
 
-    private static TokenBuilder INTEGER_TOKEN_BUILDER = new TokenBuilder().setTokenType(TokenType.NUM_INT);
+    private static final TokenBuilder INTEGER_TOKEN_BUILDER = new TokenBuilder().setTokenType(TokenType.NUM_INT);
 
-    private static TokenBuilder FLOAT_TOKEN_BUILDER = new TokenBuilder().setTokenType(TokenType.NUM_FLOAT);
+    private static final TokenBuilder FLOAT_TOKEN_BUILDER = new TokenBuilder().setTokenType(TokenType.NUM_FLOAT);
 
     static TokenBuilder get(NumericType numericType) {
         switch (numericType) {
