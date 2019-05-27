@@ -9,7 +9,7 @@ package lexical.parser.assign;
 import exceptions.ExpectedTokenException;
 import lexical.parser.Parser;
 import loader.FileLoader;
-import token.builders.AssignTokenBuilder;
+import token.builders.AssignTokenBuilderSingleton;
 import token.Token;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AssignParser implements Parser {
             character = fileLoader.getNextChar();
 
             if (character == TOKEN_DASH) {
-                return new AssignTokenBuilder().withCursorLocation(fileLoader);
+                return AssignTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
             }
 
             throw new ExpectedTokenException(

@@ -6,9 +6,7 @@
  */
 package lexical.parser.identifier;
 
-
 import automata.FiniteStateMachine;
-import exceptions.DuplicatedIdentifierException;
 import exceptions.IllegalTokenException;
 import exceptions.NoSuchTransitionException;
 import exceptions.ReservedIdentifierException;
@@ -25,7 +23,7 @@ import java.io.IOException;
 public class IdentifierParser implements Parser {
 
     @Override
-    public Token parse(FileLoader fileLoader) throws IOException, ReservedIdentifierException, IllegalTokenException, DuplicatedIdentifierException {
+    public Token parse(FileLoader fileLoader) throws IOException, ReservedIdentifierException, IllegalTokenException {
         StringBuilder lexeme = new StringBuilder();
         FiniteStateMachine stateMachine = IdentifierParserStateMachine.getInstance();
 
@@ -53,10 +51,6 @@ public class IdentifierParser implements Parser {
 
         if (SymbolTable.getInstance().isReservedKeyword(identifier)) {
             throw new ReservedIdentifierException(identifier, fileLoader.getLine(), fileLoader.getColumn() - identifier.length());
-        }
-
-        if (SymbolTable.getInstance().isIdentifierAlreadyDefined(identifier)) {
-            throw new DuplicatedIdentifierException(identifier, fileLoader.getLine(), fileLoader.getColumn() - identifier.length());
         }
 
         TokenBuilder tokenBuilder = new TokenBuilder().setTokenType(TokenType.ID).setLexeme(lexeme).setCursorLocation(fileLoader);

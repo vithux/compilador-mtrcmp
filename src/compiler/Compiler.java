@@ -14,18 +14,18 @@ import java.io.IOException;
 
 public class Compiler {
 
-
     /**
      * Método principal da aplicação que recebe o arquivo a ser compilado e inicia o processo
      * do compilador.
      *
-     * @param  args - Recebe o path do aquivo a ser compilado.
+     * @param  args - Recebe o path do arquivo a ser compilado.
      */
     public static void main(String[] args) {
-        /*string define o nome do arquivo processado pelo compilador,
-          no nosso caso o exemple_input já possui um arquivo de teste com
-          as variações de tokens e alguns erros já tratados pelo sistema */
-        String fileName = "example_input";
+        if (args.length == 0) {
+            throw new IllegalArgumentException("File path is required");
+        }
+
+        String fileName = args[0];
 
         try {
             SyntacticAnalyser syntacticAnalyser = new SyntacticAnalyser(fileName);
@@ -35,7 +35,7 @@ public class Compiler {
             e.printStackTrace();
         }
 
-        System.out.println(ErrorHandler.getInstance().errorReport());
+        System.out.println(ErrorHandler.getInstance().getReport());
         System.out.println(SymbolTable.getInstance().getReport());
     }
 }

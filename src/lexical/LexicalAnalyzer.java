@@ -6,12 +6,14 @@
  */
 package lexical;
 
-import error.DuplicatedIdentifierError;
 import error.ExpectedTokenError;
 import error.IllegalTokenError;
 import error.UnexpectedTokenError;
 import error.handler.ErrorHandler;
-import exceptions.*;
+import exceptions.ExpectedTokenException;
+import exceptions.IllegalTokenException;
+import exceptions.ReservedIdentifierException;
+import exceptions.UnexpectedTokenException;
 import lexical.parser.AbstractParserFactory;
 import lexical.parser.ParserNames;
 import loader.FileLoader;
@@ -19,7 +21,7 @@ import symbol.SymbolTable;
 import token.Token;
 import token.TokenBuilder;
 import token.TokenType;
-import token.builders.EOFTokenBuilder;
+import token.builders.EOFTokenBuilderSingleton;
 
 import java.io.EOFException;
 import java.io.FileNotFoundException;
@@ -67,7 +69,7 @@ public class LexicalAnalyzer {
                 }
             }
             catch (EOFException e) {
-                return new EOFTokenBuilder().withCursorLocation(fileLoader);
+                return EOFTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
             }
         }
     }
@@ -137,10 +139,6 @@ public class LexicalAnalyzer {
         }
         catch (ExpectedTokenException e) {
             ErrorHandler.getInstance().addError(ExpectedTokenError.from(e));
-            return null;
-        }
-        catch (DuplicatedIdentifierException e) {
-            ErrorHandler.getInstance().addError(DuplicatedIdentifierError.from(e));
             return null;
         }
         catch (ReservedIdentifierException e) {

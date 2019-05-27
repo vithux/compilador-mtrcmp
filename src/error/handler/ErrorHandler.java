@@ -7,44 +7,36 @@
 package error.handler;
 
 import error.Error;
+import utils.Report;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public final class ErrorHandler {
+public final class ErrorHandler extends Report {
 
     private static ErrorHandler instance;
 
-    private List<Error> listError;
+    private final List<Error> listError = new ArrayList<>();
 
-    private ErrorHandler() {
-        listError = new ArrayList<>();
+    @Override
+    public String getReportName() {
+        return "ERROR HANDLER REPORT";
     }
 
-    public void addError(Error error) {
-        this.listError.add(error);
-    }
-
-    public String errorReport() {
-        StringBuilder stringBuilder = new StringBuilder();
+    @Override
+    public String getReportContent() {
         StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append("### ERROR HANDLER REPORT ###");
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append(System.lineSeparator());
 
         for (Error error : listError) {
             stringJoiner.add(error.toString());
         }
 
-        stringBuilder.append(stringJoiner.toString());
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append(System.lineSeparator());
+        return stringJoiner.toString();
+    }
 
-        return stringBuilder.toString();
+    public void addError(Error error) {
+        listError.add(error);
     }
 
     public static ErrorHandler getInstance() {

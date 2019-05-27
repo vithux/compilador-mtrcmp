@@ -11,9 +11,9 @@ import exceptions.IllegalTokenException;
 import exceptions.NoSuchTransitionException;
 import lexical.parser.Parser;
 import loader.FileLoader;
-import token.builders.EOFTokenBuilder;
 import token.Token;
 import token.TokenBuilder;
+import token.builders.EOFTokenBuilderSingleton;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class NumericParser implements Parser {
                         .build();
             }
             catch (EOFException e) {
-                return new EOFTokenBuilder().withCursorLocation(fileLoader);
+                return EOFTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
             }
         }
     }
