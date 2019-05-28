@@ -13,6 +13,16 @@ import token.TokenType;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
+    /*
+    OTIMIZAÇÕES NA GRAMATICA
+
+    FEXPNUM1, FEXPNUM2, FEXPNUM3 e FRPAR estavam duplicados e foram removidos todas foram subistituidas pela FRPAR
+    FOPNUM, FOPNUM1 e FOPNUM2 estavam duplicadas e foram subistituidas pela FOPNUM
+    FNUMINT e FNUMFLOAT estavam duplicadas e foram subistituidas por FNUM
+    REPW E COND possuiam as mesmas regras internas que foi extraida para a regra derivativeINTRENAL
+     */
+
 public class SyntacticAnalyser {
 
     private final LexicalAnalyzer lexicalAnalyzer;
@@ -190,17 +200,7 @@ public class SyntacticAnalyser {
             //LOG ERRO
         }
 
-        token = lexicalAnalyzer.nextToken();
-        if (token.getTokenType() != TokenType.L_PAR) {
-            //LOG ERRO
-        }
-
-        derivativeEXPLO();
-
-        token = lexicalAnalyzer.nextToken();
-        if (token.getTokenType() != TokenType.R_PAR) {
-            //LOG ERRO
-        }
+        derivativeINTRENAL();
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.THEN) {
@@ -261,11 +261,11 @@ public class SyntacticAnalyser {
 
         } else if (token.getTokenType() == TokenType.NUM_INT) {
 
-            derivativeFNUMINT();
+            derivativeFNUM();
 
         } else if (token.getTokenType() == TokenType.NUM_FLOAT) {
 
-            derivativeFNUMFLOAT();
+            derivativeFNUM();
 
         } else if (token.getTokenType() == TokenType.L_PAR) {
 
@@ -306,31 +306,14 @@ public class SyntacticAnalyser {
 
             lexicalAnalyzer.storeToken(token);
             derivativeEXPNUM();
-            derivativeFEXPNUM1();
+            derivativeFRPAR();
 
         } else {
             //LOG ERRO
         }
     }
 
-    private void derivativeFEXPNUM1() throws IOException {
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.RELOP) {
-
-            derivativeEXPNUM();
-
-        } else if (token.getTokenType() == TokenType.TERM) { // devo mesmo armazenar nese caso?
-
-            lexicalAnalyzer.storeToken(token);
-
-        } else {
-            //LOG ERRO
-        }
-    }
-
-    private void derivativeFNUMINT() throws IOException {
+    private void derivativeFNUM() throws IOException {
 
         Token token = lexicalAnalyzer.nextToken();
 
@@ -338,92 +321,13 @@ public class SyntacticAnalyser {
 
             lexicalAnalyzer.storeToken(token);
             derivativeOPNUM();
-            derivativeFOPNUM1();
-
-        } else {
-            //LOG ERRO
-        }
-
-    }
-
-    private void derivativeFOPNUM1() throws IOException {
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.L_PAR || token.getTokenType() == TokenType.ID || token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) { //first EXPNUM
-
-            lexicalAnalyzer.storeToken(token);
-            derivativeEXPNUM();
-            derivativeFEXPNUM2();
+            derivativeFOPNUM();
 
         } else {
             //LOG ERRO
         }
     }
 
-    private void derivativeFEXPNUM2() throws IOException {
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.RELOP) {
-
-            derivativeEXPNUM();
-
-        } else if (token.getTokenType() == TokenType.TERM) { //follow fexpnum2
-
-            lexicalAnalyzer.storeToken(token); // devo mesmo armazenar esse token?
-
-        } else {
-            //LOG ERRO
-        }
-    }
-
-    private void derivativeFNUMFLOAT() throws IOException {
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.ARIT_AS || token.getTokenType() == TokenType.ARIT_MD) { // first opnum
-
-            lexicalAnalyzer.storeToken(token);
-            derivativeOPNUM();
-            derivativeFOPNUM2();
-
-        } else {
-            //LOG ERRO
-        }
-    }
-
-    private void derivativeFOPNUM2() throws IOException {
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.L_PAR || token.getTokenType() == TokenType.ID || token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) { //first EXPNUM
-
-            lexicalAnalyzer.storeToken(token);
-            derivativeEXPNUM();
-            derivativeFEXPNUM3();
-
-        } else {
-            //LOG ERRO
-        }
-    }
-
-    private void derivativeFEXPNUM3() throws IOException { // se repete em fexpnum1 e 2 ?
-
-        Token token = lexicalAnalyzer.nextToken();
-
-        if (token.getTokenType() == TokenType.RELOP) {
-
-            derivativeEXPNUM();
-
-        } else if (token.getTokenType() == TokenType.TERM) { //follow FEXPNUM3
-
-            lexicalAnalyzer.storeToken(token);
-
-        } else {
-            //LOG ERRO
-        }
-    }
 
     private void derivativeFLPAR() throws IOException {
 
@@ -702,7 +606,13 @@ public class SyntacticAnalyser {
             //LOG ERRO
         }
 
-        token = lexicalAnalyzer.nextToken();
+        derivativeINTRENAL();
+        derivativeBLOCO();
+    }
+
+    private void derivativeINTRENAL() throws IOException {
+
+        Token token = lexicalAnalyzer.nextToken();
         if(token.getTokenType() != TokenType.L_PAR){
             //LOG ERRO
         }
@@ -713,8 +623,6 @@ public class SyntacticAnalyser {
         if(token.getTokenType() != TokenType.R_PAR){
             //LOG ERRO
         }
-
-        derivativeBLOCO();
     }
 
     //FID1 esta duplicado na gramatica
