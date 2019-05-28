@@ -380,30 +380,151 @@ public class SyntacticAnalyser {
 
     private void derivativeFNUMFLOAT() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.ARIT_AS || token.getTokenType() == TokenType.ARIT_MD) { // first opnum
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeOPNUM();
+            derivativeFOPNUM2();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeFOPNUM2() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.L_PAR || token.getTokenType() == TokenType.ID || token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) { //first EXPNUM
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeEXPNUM();
+            derivativeFEXPNUM3();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
-    private void derivativeFEXPNUM3() throws IOException {
+    private void derivativeFEXPNUM3() throws IOException { // se repete em fexpnum1 e 2 ?
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.RELOP) {
+
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.TERM) { //follow FEXPNUM3
+
+            lexicalAnalyzer.storeToken(token);
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeFLPAR() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.L_PAR || token.getTokenType() == TokenType.ID || token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) { //first EXPNUM
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeEXPNUM();
+            derivativeFEXPNUM();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeFEXPNUM() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.R_PAR) {
+
+            derivativeFRPAR();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeFRPAR() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.RELOP) {
+
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.TERM) { // follow FRPAR
+
+            lexicalAnalyzer.storeToken(token);
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeEXPLO() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.LOGIC_VAL) {
+
+            derivativeFVALLOG();
+
+        } else if (token.getTokenType() == TokenType.ID) {
+
+            derivativeFIDI1();
+
+        } else if (token.getTokenType() == TokenType.NUM_INT) {
+
+            derivativeOPNUM();
+            derivativeEXPNUM();
+
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.RELOP) {
+                //LOG ERRO
+            }
+
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.NUM_FLOAT) {
+
+            derivativeOPNUM();
+            derivativeEXPNUM();
+
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.RELOP) {
+                //LOG ERRO
+            }
+
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.L_PAR) {
+
+            derivativeEXPNUM();
+
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.R_PAR) {
+                //LOG ERRO
+            }
+
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.RELOP) {
+                //LOG ERRO
+            }
+
+            derivativeEXPNUM();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeFIDI1() throws IOException {
@@ -421,14 +542,17 @@ public class SyntacticAnalyser {
             derivativeOPNUM();
             derivativeEXPNUM();
 
-            if (token.getTokenType() == TokenType.RELOP) {
-                derivativeEXPNUM();
-            } else {
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.RELOP) {
                 // log erro
             }
 
-        } else if (token.getTokenType() == TokenType.END) { //fazer um hashmap do follow dessa regra
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.TERM || token.getTokenType() == TokenType.R_PAR) { //fazer um hashmap do follow dessa regra
+
             lexicalAnalyzer.storeToken(token);
+
         } else {
             //log erro
         }
@@ -436,35 +560,162 @@ public class SyntacticAnalyser {
 
     private void derivativeFVALLOG() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.LOGIC_OP) {
+
+            derivativeEXPLO();
+
+        } else if (token.getTokenType() == TokenType.TERM || token.getTokenType() == TokenType.R_PAR) { // follow fvallog
+
+            lexicalAnalyzer.storeToken(token);
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeEXPNUM() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.ID || token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) { // first de val
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeVAL();
+            derivativeXEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.L_PAR) {
+
+            derivativeEXPNUM();
+
+            token = lexicalAnalyzer.nextToken();
+            if (token.getTokenType() != TokenType.R_PAR) {
+                //LOG ERRO
+            }
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeXEXPNUM() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.ARIT_AS || token.getTokenType() == TokenType.ARIT_MD) { //first opnum
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeOPNUM();
+            derivativeEXPNUM();
+
+        } else if (token.getTokenType() == TokenType.RELOP) { //adicionar o follow de XEXPNUM
+
+            lexicalAnalyzer.storeToken(token);
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeOPNUM() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.ARIT_AS) {
+            //sum number
+        } else if (token.getTokenType() == TokenType.ARIT_MD) {
+            //md number
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeVAL() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.ID) {
+
+        } else if (token.getTokenType() == TokenType.NUM_INT) {
+
+        } else if (token.getTokenType() == TokenType.NUM_FLOAT) {
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeREP() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() == TokenType.FOR){
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeREPF();
+
+        } else  if (token.getTokenType() == TokenType.WHILE){
+
+            lexicalAnalyzer.storeToken(token);
+            derivativeREPW();
+
+        } else {
+            //LOG ERRO
+        }
     }
 
     private void derivativeREPF() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() != TokenType.FOR){
+            //LOG ERRO
+        }
+
+        token = lexicalAnalyzer.nextToken();
+        if(token.getTokenType() != TokenType.ID){
+            //LOG ERRO
+        }
+
+        token = lexicalAnalyzer.nextToken();
+        if(token.getTokenType() != TokenType.ASSIGN){
+            //LOG ERRO
+        }
+
+        derivativeEXPNUM();
+
+        token = lexicalAnalyzer.nextToken();
+        if(token.getTokenType() != TokenType.TO){
+            //LOG ERRO
+        }
+
+        derivativeEXPNUM();
+        derivativeBLOCO();
     }
 
     private void derivativeREPW() throws IOException {
 
+        Token token = lexicalAnalyzer.nextToken();
+
+        if (token.getTokenType() != TokenType.WHILE){
+            //LOG ERRO
+        }
+
+        token = lexicalAnalyzer.nextToken();
+        if(token.getTokenType() != TokenType.L_PAR){
+            //LOG ERRO
+        }
+
+        derivativeEXPLO();
+
+        token = lexicalAnalyzer.nextToken();
+        if(token.getTokenType() != TokenType.R_PAR){
+            //LOG ERRO
+        }
+
+        derivativeBLOCO();
     }
 
-
+    //FID1 esta duplicado na gramatica
 }
