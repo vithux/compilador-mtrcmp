@@ -7,6 +7,8 @@
 package syntactic;
 
 import lexical.LexicalAnalyzer;
+import symbol.Symbol;
+import symbol.SymbolTable;
 import token.Token;
 import token.TokenType;
 
@@ -184,12 +186,15 @@ public class SyntacticAnalyser {
             //LOG ERRO
         }
 
+        //aqui valida se a variavel já foi declarada
+        if (SymbolTable.getInstance().getSymbol(token.getLexeme()) != null) {
+            // LOG ERRO
+        }
+
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
             //LOG ERRO
         }
-
-        //aqui valida se a variavel já foi declarada
     }
 
     private void derivativeCOND() throws IOException {
