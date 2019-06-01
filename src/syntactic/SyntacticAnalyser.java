@@ -11,6 +11,7 @@ import error.handler.ErrorHandler;
 import lexical.LexicalAnalyzer;
 import symbol.First;
 import symbol.Follow;
+import symbol.NonTerminal;
 import symbol.SymbolTable;
 import token.Token;
 import token.TokenBuilder;
@@ -18,8 +19,7 @@ import token.TokenType;
 
 import java.io.FileNotFoundException;
 
-import static utils.Constants.*;
-
+import static symbol.NonTerminal.*;
 
     /*
     OTIMIZAÇÕES NA GRAMATICA
@@ -560,7 +560,7 @@ public class SyntacticAnalyser {
             derivativeOPNUM();
             derivativeEXPNUM();
 
-        } else if (containsFollow(XEXPNUM,token)) {
+        } else if (containsFollow(XEXPNUM, token)) {
 
             lexicalAnalyzer.storeToken(token);
 
@@ -676,12 +676,11 @@ public class SyntacticAnalyser {
         ErrorHandler.getInstance().addError(new SyntaticError(actual, given));
     }
 
-
-    private boolean containsFirst(String type, Token token) {
+    private boolean containsFirst(NonTerminal type, Token token) {
         return First.getSymbols().get(type).contains(token.getTokenType());
     }
 
-    private boolean containsFollow(String type, Token token) {
+    private boolean containsFollow(NonTerminal type, Token token) {
         return Follow.getSymbols().get(type).contains(token.getTokenType());
     }
 

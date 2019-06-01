@@ -27,32 +27,4 @@ public class Constants {
     public static final char TOKEN_HASH = '#';
     public static final char TOKEN_QUOTE = '"';
     public static final char TOKEN_DASH = '-';
-
-    public static final String S = "S";
-    public static final String BLOCO = "BLOCO";
-    public static final String CMDS = "CMDS";
-    public static final String CMD = "CMD";
-    public static final String DECL = "DECL";
-    public static final String COND = "COND";
-    public static final String CNDB = "CNDB";
-    public static final String ATRIB = "ATRIB";
-    public static final String EXP = "EXP";
-    public static final String FID = "FID";
-    public static final String FOPNUM = "FOPNUM";
-    public static final String FNUM = "FNUMINT";
-    public static final String FOPNUM_1 = "FOPNUM_1";
-    public static final String FOPNUM_2 = "FOPNUM_2";
-    public static final String FLPAR = "FLPAR";
-    public static final String FEXPNUM = "FEXPNUM";
-    public static final String FRPAR = "FRPAR";
-    public static final String EXPLO = "EXPLO";
-    public static final String FID_1 = "FID_1";
-    public static final String FVALLOG = "FVALLOG";
-    public static final String EXPNUM = "EXPNUM";
-    public static final String XEXPNUM = "XEXPNUM";
-    public static final String OPNUM = "OPNUM";
-    public static final String VAL = "VAL";
-    public static final String REP = "REP";
-    public static final String REPF = "REPF";
-    public static final String REPW = "REPW";
 }

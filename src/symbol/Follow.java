@@ -8,12 +8,12 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static symbol.NonTerminal.*;
 import static token.TokenType.*;
-import static utils.Constants.*;
 
 public class Follow {
 
-    private static final Map<String, List<TokenType>> symbols = new HashMap<>();
+    private static final Map<NonTerminal, List<TokenType>> symbols = new HashMap<>();
 
     static {
         symbols.put(S, singletonList(EOF));
@@ -45,7 +45,7 @@ public class Follow {
         symbols.put(BLOCO, asList(DECLARE, IF, FOR, WHILE, ID, END, END_PROG, ELSE));
     }
 
-    public static Map<String, List<TokenType>> getSymbols() {
+    public static Map<NonTerminal, List<TokenType>> getSymbols() {
         return symbols;
     }
 }
