@@ -56,4 +56,13 @@ public class TokenBuilder {
     public Token build() {
         return new Token(tokenType, lexeme, column, line);
     }
+
+    public TokenBuilder copyOf(Token token) {
+        this.line = token.getLine();
+        this.column = token.getColumn();
+        this.lexeme = token.getLexeme();
+        this.tokenType = token.getTokenType();
+
+        return this;
+    }
 }
