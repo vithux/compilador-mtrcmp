@@ -10,9 +10,13 @@ public class Error {
 
     private String description;
 
-    private long line;
+    private Long line;
 
-    private long column;
+    private Long column;
+
+    public Error(String description) {
+        this.description = description;
+    }
 
     public Error(String description, long line, long column) {
         this.line = line;
@@ -24,8 +28,15 @@ public class Error {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Error{");
         sb.append("description=\'").append(description).append('\'');
-        sb.append(", line=").append(line);
-        sb.append(", column=").append(column);
+
+        if (this.line != null) {
+            sb.append(", line=").append(line);
+        }
+
+        if (this.column != null) {
+            sb.append(", column=").append(column);
+        }
+
         sb.append('}');
         return sb.toString();
     }

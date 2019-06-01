@@ -6,6 +6,9 @@
  */
 package syntactic;
 
+import error.Error;
+import error.SyntaticError;
+import error.handler.ErrorHandler;
 import lexical.LexicalAnalyzer;
 import symbol.Symbol;
 import symbol.SymbolTable;
@@ -628,6 +631,10 @@ public class SyntacticAnalyser {
         if(token.getTokenType() != TokenType.R_PAR){
             //LOG ERRO
         }
+    }
+
+    private void noticeError(String actual, String given) {
+        ErrorHandler.getInstance().addError(new SyntaticError(actual, given));
     }
 
     //FID1 esta duplicado na gramatica

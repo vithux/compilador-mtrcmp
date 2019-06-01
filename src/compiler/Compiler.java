@@ -18,7 +18,7 @@ public class Compiler {
      * Método principal da aplicação que recebe o arquivo a ser compilado e inicia o processo
      * do compilador.
      *
-     * @param  args - Recebe o path do arquivo a ser compilado.
+     * @param args - Recebe o path do arquivo a ser compilado.
      */
     public static void main(String[] args) {
         if (args.length == 0) {
