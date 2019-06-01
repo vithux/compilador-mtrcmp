@@ -18,7 +18,12 @@ import token.TokenBuilder;
 import token.TokenType;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
+import static java.util.Arrays.asList;
+
+import static java.util.Collections.singletonList;
 import static symbol.NonTerminal.*;
 
     /*
@@ -45,22 +50,20 @@ public class SyntacticAnalyser {
     private void derivativeS() {
 
         Token token = lexicalAnalyzer.nextToken();
-        Boolean erro = false;
+        boolean erro;
 
         if (token.getTokenType() != TokenType.PROGRAM) {
-            // log erro
-            erro = true;
+            noticeError(TokenType.PROGRAM, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.ID) {
-            //log erro
-            erro = true;
+            noticeError(TokenType.ID, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
-            //log erro
+            noticeError(TokenType.TERM, token);
             erro = true;
         } else {
             erro = false;
@@ -72,7 +75,7 @@ public class SyntacticAnalyser {
             no caso ele espera um TERM.
          */
 
-        if (erro == true) {
+        if (erro) {
             while (true) {
                 token = lexicalAnalyzer.nextToken();
                 if (token.getTokenType() != TokenType.TERM) {
@@ -85,12 +88,12 @@ public class SyntacticAnalyser {
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.END_PROG) {
-            // log erro
+            noticeError(TokenType.END_PROG, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
-            //log erro
+            noticeError(TokenType.TERM, token);
         }
     }
 
@@ -105,7 +108,7 @@ public class SyntacticAnalyser {
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.END) {
-                //log erro
+                noticeError(TokenType.END, token);
             }
 
         } else if (token.getTokenType() == TokenType.DECLARE) {
@@ -114,7 +117,7 @@ public class SyntacticAnalyser {
             derivativeCMD();
 
         } else {
-            //log erro
+            noticeError(asList(TokenType.DECLARE, TokenType.BEGIN), token);
         }
     }
 
@@ -157,7 +160,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //log erro
+            noticeError(asList(TokenType.DECLARE, TokenType.IF, TokenType.FOR, TokenType.WHILE, TokenType.ID), token);
         }
     }
 
@@ -185,6 +188,8 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
             derivativeATRIB();
 
+        } else {
+            noticeError(asList(TokenType.DECLARE, TokenType.IF, TokenType.ID), token);
         }
     }
 
@@ -193,33 +198,31 @@ public class SyntacticAnalyser {
         Token idToken = null;
 
         if (token.getTokenType() != TokenType.DECLARE) {
-            //LOG ERRO
+            noticeError(TokenType.DECLARE, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.ID) {
-            //LOG ERRO
-        }
-        else {
+            noticeError(TokenType.ID, token);
+        } else {
             idToken = token;
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TYPE) {
-            //LOG ERRO
+            noticeError(TokenType.TYPE, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
-            //LOG ERRO
+            noticeError(TokenType.TERM, token);
         }
 
         if (idToken != null) {
             //aqui valida se a variavel já foi declarada
             if (SymbolTable.getInstance().getSymbol(token.getLexeme()) != null) {
                 // LOG ERRO
-            }
-            else {
+            } else {
                 SymbolTable.getInstance().registerSymbol(idToken.getLexeme(), new TokenBuilder().copyOf(token));
             }
         }
@@ -230,14 +233,14 @@ public class SyntacticAnalyser {
         Token token = lexicalAnalyzer.nextToken();
 
         if (token.getTokenType() != TokenType.IF) {
-            //LOG ERRO
+            noticeError(TokenType.IF, token);
         }
 
         derivativeINTRENAL();
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.THEN) {
-            //LOG ERRO
+            noticeError(TokenType.THEN, token);
         }
 
         derivativeBLOCO();
@@ -257,7 +260,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(TokenType.ELSE, token);
         }
     }
 
@@ -266,19 +269,19 @@ public class SyntacticAnalyser {
         Token token = lexicalAnalyzer.nextToken();
 
         if (token.getTokenType() != TokenType.ID) {
-            //LOG ERRO
+            noticeError(TokenType.ID, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.ASSIGN) {
-            //LOG ERRO
+            noticeError(TokenType.ASSIGN, token);
         }
 
         derivativeEXP();
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
-            //LOG ERRO
+            noticeError(TokenType.TERM, token);
         }
     }
 
@@ -307,9 +310,9 @@ public class SyntacticAnalyser {
             derivativeFLPAR();
 
         } else if (token.getTokenType() == TokenType.LITERAL) {
-            // faz alguma coisa
+
         } else {
-            //LOG ERRO
+            noticeError(asList(TokenType.LOGIC_VAL, TokenType.ID, TokenType.NUM_INT, TokenType.NUM_FLOAT, TokenType.L_PAR, TokenType.LITERAL), token);
         }
     }
 
@@ -333,7 +336,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(TokenType.LOGIC_OP, token);
         }
     }
 
@@ -348,7 +351,7 @@ public class SyntacticAnalyser {
             derivativeFRPAR();
 
         } else {
-            //LOG ERRO
+            noticeError(TokenType.L_PAR, token);
         }
     }
 
@@ -362,12 +365,12 @@ public class SyntacticAnalyser {
             derivativeOPNUM();
             derivativeFOPNUM();
 
-        } else if (containsFollow(FNUM, token)) { // corrige
+        } else if (containsFollow(FNUM, token)) {
 
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(First.getSymbols().get(OPNUM), Follow.getSymbols().get(FNUM))), token);
         }
     }
 
@@ -383,7 +386,7 @@ public class SyntacticAnalyser {
             derivativeFEXPNUM();
 
         } else {
-            //LOG ERRO
+            noticeError(First.getSymbols().get(EXPNUM), token);
         }
     }
 
@@ -400,7 +403,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(Follow.getSymbols().get(FEXPNUM), singletonList(TokenType.R_PAR))), token);
         }
     }
 
@@ -417,7 +420,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(Follow.getSymbols().get(FRPAR), singletonList(TokenType.RELOP))), token);
         }
     }
 
@@ -433,26 +436,14 @@ public class SyntacticAnalyser {
 
             derivativeFIDI1();
 
-        } else if (token.getTokenType() == TokenType.NUM_INT) {
+        } else if (token.getTokenType() == TokenType.NUM_INT || token.getTokenType() == TokenType.NUM_FLOAT) {
 
             derivativeOPNUM();
             derivativeEXPNUM();
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.RELOP) {
-                //LOG ERRO
-            }
-
-            derivativeEXPNUM();
-
-        } else if (token.getTokenType() == TokenType.NUM_FLOAT) {
-
-            derivativeOPNUM();
-            derivativeEXPNUM();
-
-            token = lexicalAnalyzer.nextToken();
-            if (token.getTokenType() != TokenType.RELOP) {
-                //LOG ERRO
+                noticeError(TokenType.RELOP, token);
             }
 
             derivativeEXPNUM();
@@ -463,18 +454,18 @@ public class SyntacticAnalyser {
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.R_PAR) {
-                //LOG ERRO
+                noticeError(TokenType.R_PAR, token);
             }
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.RELOP) {
-                //LOG ERRO
+                noticeError(TokenType.RELOP, token);
             }
 
             derivativeEXPNUM();
 
         } else {
-            //LOG ERRO
+            noticeError(asList(TokenType.LOGIC_VAL, TokenType.ID, TokenType.NUM_INT, TokenType.RELOP, TokenType.NUM_FLOAT, TokenType.L_PAR), token);
         }
     }
 
@@ -495,17 +486,21 @@ public class SyntacticAnalyser {
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.RELOP) {
-                // log erro
+                noticeError(TokenType.RELOP, token);
             }
 
             derivativeEXPNUM();
 
-        } else if (containsFollow(FID_1,token)) {
+        } else if (token.getTokenType() == TokenType.RELOP) {
+
+            derivativeEXPNUM();
+
+        } else if (containsFollow(FID_1, token)) {
 
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //log erro
+            noticeError(createListSymbols(asList(Follow.getSymbols().get(FID_1), asList(TokenType.LOGIC_OP, TokenType.ARIT_AS, TokenType.ARIT_MD, TokenType.RELOP))), token);
         }
     }
 
@@ -517,12 +512,12 @@ public class SyntacticAnalyser {
 
             derivativeEXPLO();
 
-        } else if (containsFollow(FVALLOG,token)) {
+        } else if (containsFollow(FVALLOG, token)) {
 
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(Follow.getSymbols().get(FVALLOG), singletonList(TokenType.LOGIC_OP))), token);
         }
     }
 
@@ -542,11 +537,11 @@ public class SyntacticAnalyser {
 
             token = lexicalAnalyzer.nextToken();
             if (token.getTokenType() != TokenType.R_PAR) {
-                //LOG ERRO
+                noticeError(TokenType.R_PAR, token);
             }
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(First.getSymbols().get(VAL), singletonList(TokenType.L_PAR))), token);
         }
     }
 
@@ -565,7 +560,7 @@ public class SyntacticAnalyser {
             lexicalAnalyzer.storeToken(token);
 
         } else {
-            //LOG ERRO
+            noticeError(createListSymbols(asList(First.getSymbols().get(OPNUM), Follow.getSymbols().get(XEXPNUM))), token);
         }
     }
 
@@ -578,7 +573,7 @@ public class SyntacticAnalyser {
         } else if (token.getTokenType() == TokenType.ARIT_MD) {
             //md number
         } else {
-            //LOG ERRO
+            noticeError(asList(TokenType.ARIT_AS, TokenType.ARIT_MD), token);
         }
     }
 
@@ -593,7 +588,7 @@ public class SyntacticAnalyser {
         } else if (token.getTokenType() == TokenType.NUM_FLOAT) {
 
         } else {
-            //LOG ERRO
+            noticeError(asList(TokenType.ID, TokenType.NUM_INT, TokenType.NUM_FLOAT), token);
         }
     }
 
@@ -612,7 +607,7 @@ public class SyntacticAnalyser {
             derivativeREPW();
 
         } else {
-            //LOG ERRO
+            noticeError(asList(TokenType.FOR, TokenType.WHILE), token);
         }
     }
 
@@ -621,24 +616,24 @@ public class SyntacticAnalyser {
         Token token = lexicalAnalyzer.nextToken();
 
         if (token.getTokenType() != TokenType.FOR) {
-            //LOG ERRO
+            noticeError(TokenType.FOR, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.ID) {
-            //LOG ERRO
+            noticeError(TokenType.ID, token);
         }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.ASSIGN) {
-            //LOG ERRO
+            noticeError(TokenType.ASSIGN, token);
         }
 
         derivativeEXPNUM();
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TO) {
-            //LOG ERRO
+            noticeError(TokenType.TO, token);
         }
 
         derivativeEXPNUM();
@@ -650,7 +645,7 @@ public class SyntacticAnalyser {
         Token token = lexicalAnalyzer.nextToken();
 
         if (token.getTokenType() != TokenType.WHILE) {
-            //LOG ERRO
+            noticeError(TokenType.WHILE, token);
         }
 
         derivativeINTRENAL();
@@ -661,19 +656,35 @@ public class SyntacticAnalyser {
 
         Token token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.L_PAR) {
-            //LOG ERRO
+            noticeError(TokenType.L_PAR, token);
         }
 
         derivativeEXPLO();
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.R_PAR) {
-            //LOG ERRO
+            noticeError(TokenType.R_PAR, token);
         }
     }
 
-    private void noticeError(String actual, String given) {
-        ErrorHandler.getInstance().addError(new SyntaticError(actual, given));
+    private void noticeError(List<TokenType> expectedToken, Token receivedToken) {
+        StringBuilder expected = new StringBuilder();
+
+
+        for (TokenType t : expectedToken) {
+            expected.append(t.toString());
+            expected.append(", ");
+        }
+
+        noticeError(expected.toString(), receivedToken.getLexeme());
+    }
+
+    private void noticeError(TokenType expectedToken, Token receivedToken) {
+        noticeError(expectedToken.toString(), receivedToken.getLexeme());
+    }
+
+    private void noticeError(String expected, String received) {
+        ErrorHandler.getInstance().addError(new SyntaticError(expected, received));
     }
 
     private boolean containsFirst(NonTerminal type, Token token) {
@@ -684,5 +695,11 @@ public class SyntacticAnalyser {
         return Follow.getSymbols().get(type).contains(token.getTokenType());
     }
 
-    //FID1 esta duplicado na gramatica
+    private List<TokenType> createListSymbols(List<List<TokenType>> lists) {
+        List<TokenType> list = new ArrayList<>();
+        for (List<TokenType> l : lists) {
+            list.addAll(l);
+        }
+        return list;
+    }
 }
