@@ -53,9 +53,6 @@ public class IdentifierParser implements Parser {
             throw new ReservedIdentifierException(identifier, fileLoader.getLine(), fileLoader.getColumn() - identifier.length());
         }
 
-        TokenBuilder tokenBuilder = new TokenBuilder().setTokenType(TokenType.ID).setLexeme(lexeme).setCursorLocation(fileLoader);
-        SymbolTable.getInstance().registerSymbol(identifier, tokenBuilder);
-
-        return tokenBuilder.build();
+        return new TokenBuilder().setTokenType(TokenType.ID).setLexeme(lexeme).setCursorLocation(fileLoader).build();
     }
 }
