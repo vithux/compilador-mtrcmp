@@ -13,6 +13,7 @@ import symbol.First;
 import symbol.Follow;
 import symbol.SymbolTable;
 import token.Token;
+import token.TokenBuilder;
 import token.TokenType;
 
 import java.io.FileNotFoundException;
@@ -188,8 +189,8 @@ public class SyntacticAnalyser {
     }
 
     private void derivativeDECL() {
-
         Token token = lexicalAnalyzer.nextToken();
+        Token idToken = null;
 
         if (token.getTokenType() != TokenType.DECLARE) {
             //LOG ERRO
@@ -199,20 +200,28 @@ public class SyntacticAnalyser {
         if (token.getTokenType() != TokenType.ID) {
             //LOG ERRO
         }
+        else {
+            idToken = token;
+        }
 
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TYPE) {
             //LOG ERRO
         }
 
-        //aqui valida se a variavel já foi declarada
-        if (SymbolTable.getInstance().getSymbol(token.getLexeme()) != null) {
-            // LOG ERRO
-        }
-
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
             //LOG ERRO
+        }
+
+        if (idToken != null) {
+            //aqui valida se a variavel já foi declarada
+            if (SymbolTable.getInstance().getSymbol(token.getLexeme()) != null) {
+                // LOG ERRO
+            }
+            else {
+                SymbolTable.getInstance().registerSymbol(idToken.getLexeme(), new TokenBuilder().copyOf(token));
+            }
         }
     }
 
