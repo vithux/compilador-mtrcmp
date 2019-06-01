@@ -6,7 +6,6 @@
  */
 package syntactic;
 
-import error.Error;
 import error.SyntaticError;
 import error.handler.ErrorHandler;
 import lexical.LexicalAnalyzer;
@@ -354,7 +353,7 @@ public class SyntacticAnalyser {
             derivativeOPNUM();
             derivativeFOPNUM();
 
-        } else if (containsFollow(FNUMINT, token)) { // corrige
+        } else if (containsFollow(FNUM, token)) { // corrige
 
             lexicalAnalyzer.storeToken(token);
 
@@ -492,7 +491,7 @@ public class SyntacticAnalyser {
 
             derivativeEXPNUM();
 
-        } else if (token.getTokenType() == TokenType.TERM || token.getTokenType() == TokenType.R_PAR) { //fazer um hashmap do follow dessa regra
+        } else if (containsFollow(FID_1,token)) {
 
             lexicalAnalyzer.storeToken(token);
 
@@ -509,7 +508,7 @@ public class SyntacticAnalyser {
 
             derivativeEXPLO();
 
-        } else if (token.getTokenType() == TokenType.TERM || token.getTokenType() == TokenType.R_PAR) { // follow fvallog
+        } else if (containsFollow(FVALLOG,token)) {
 
             lexicalAnalyzer.storeToken(token);
 
@@ -552,7 +551,7 @@ public class SyntacticAnalyser {
             derivativeOPNUM();
             derivativeEXPNUM();
 
-        } else if (token.getTokenType() == TokenType.RELOP) { //adicionar o follow de XEXPNUM
+        } else if (containsFollow(XEXPNUM,token)) {
 
             lexicalAnalyzer.storeToken(token);
 

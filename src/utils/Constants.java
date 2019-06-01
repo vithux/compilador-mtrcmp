@@ -39,13 +39,9 @@ public class Constants {
     public static final String EXP = "EXP";
     public static final String FID = "FID";
     public static final String FOPNUM = "FOPNUM";
-    public static final String FEXPNUM_1 = "FEXPNUM_1";
-    public static final String FNUMINT = "FNUMINT";
+    public static final String FNUM = "FNUMINT";
     public static final String FOPNUM_1 = "FOPNUM_1";
-    public static final String FEXPNUM_2 = "FEXPNUM_2";
-    public static final String FNUMFLOAT = "FNUMFLOAT";
     public static final String FOPNUM_2 = "FOPNUM_2";
-    public static final String FEXPNUM_3 = "FEXPNUM_3";
     public static final String FLPAR = "FLPAR";
     public static final String FEXPNUM = "FEXPNUM";
     public static final String FRPAR = "FRPAR";

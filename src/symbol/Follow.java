@@ -26,13 +26,9 @@ public class Follow {
         symbols.put(EXP, singletonList(TERM));
         symbols.put(FID, singletonList(TERM));
         symbols.put(FOPNUM, singletonList(TERM));
-        symbols.put(FEXPNUM_1, singletonList(TERM));
-        symbols.put(FNUMINT, singletonList(TERM));
+        symbols.put(FNUM, singletonList(TERM));
         symbols.put(FOPNUM_1, singletonList(TERM));
-        symbols.put(FEXPNUM_2, singletonList(TERM));
-        symbols.put(FNUMFLOAT, singletonList(TERM));
         symbols.put(FOPNUM_2, singletonList(TERM));
-        symbols.put(FEXPNUM_3, singletonList(TERM));
         symbols.put(FLPAR, singletonList(TERM));
         symbols.put(FEXPNUM, singletonList(TERM));
         symbols.put(FRPAR, singletonList(TERM));
