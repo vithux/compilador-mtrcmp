@@ -43,34 +43,36 @@ public class LexicalAnalyzer {
      *
      * @return Token - Retorna um token valido.
      */
-    public Token nextToken() throws IOException {
+    public Token nextToken() {
+        try {
+            if (buffer != null) {
+                Token returnBuffer = buffer;
+                buffer = null;
+                return returnBuffer;
+            }
 
-        if (buffer != null){
-            Token returnBuffer = buffer;
-            buffer = null;
-            return returnBuffer;
-        }
+            while (true) {
+                try {
+                    char character = fileLoader.getNextChar();
 
-        while (true) {
-            try {
-                char character = fileLoader.getNextChar();
+                    if (!Character.isWhitespace(character)) {
+                        try {
+                            Token token = getToken(character);
 
-                if (!Character.isWhitespace(character)) {
-                    try {
-                        Token token = getToken(character);
-
-                        if (token != null) {
-                            return token;
+                            if (token != null) {
+                                return token;
+                            }
+                        } catch (UnexpectedTokenException e) {
+                            ErrorHandler.getInstance().addError(UnexpectedTokenError.from(e));
                         }
                     }
-                    catch (UnexpectedTokenException e) {
-                        ErrorHandler.getInstance().addError(UnexpectedTokenError.from(e));
-                    }
+                } catch (EOFException e) {
+                    return EOFTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
                 }
             }
-            catch (EOFException e) {
-                return EOFTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
-            }
+        }catch (IOException e){
+            e.printStackTrace();
+            return null;
         }
     }
 
