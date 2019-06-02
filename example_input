@@ -1,55 +1,15 @@
-prodgram s ;
-
+program bla;
 begin
+    declare age int;
+    declare success bool;
 
-<- ( ) + - ; * / "VITOR"
+    age <- 1;
 
-{# teste de relop #}
-$df $dd $eq $ew $lt $l4 $le $lr $gt $g? $ge $gq
-
-{#
-j
-h
-g
-hj
-#}
-
-00001
-
-1.abacaxi
-1.$gt
-
-abcaxi@
-
-{# teste de numeros #}
-1;
-12;
-1.2;
-12.34;
-1E+10;
-12E+10;
-12.3E+10;
-
-{# teste de palavra reservada #}
-true
-false
-and
-not
-or
-bool
-text
-int
-program
-end_prog
-begin
+    if (age $gt 10) then begin
+        success <- true;
+    end
+    else begin
+        success <- false;
+    end
 end
-if
-then
-else
-for
-while
-declare
-to
-
-{# teste de variaveis #}
-banana
+end_prog;

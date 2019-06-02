@@ -6,6 +6,9 @@
  */
 package syntactic;
 
+import error.DuplicatedIdentifierError;
+import error.Error;
+import error.IdentifierNotDeclaredError;
 import error.SyntaticError;
 import error.handler.ErrorHandler;
 import lexical.LexicalAnalyzer;
@@ -20,9 +23,9 @@ import token.TokenType;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
-
 import static java.util.Collections.singletonList;
 import static symbol.NonTerminal.*;
 
@@ -220,8 +223,8 @@ public class SyntacticAnalyser {
 
         if (idToken != null) {
             //aqui valida se a variavel já foi declarada
-            if (SymbolTable.getInstance().getSymbol(token.getLexeme()) != null) {
-                // LOG ERRO
+            if (SymbolTable.getInstance().getSymbol(idToken.getLexeme()) != null) {
+                noticeError(new DuplicatedIdentifierError(idToken.getLexeme()));
             } else {
                 SymbolTable.getInstance().registerSymbol(idToken.getLexeme(), new TokenBuilder().copyOf(token));
             }
@@ -265,11 +268,14 @@ public class SyntacticAnalyser {
     }
 
     private void derivativeATRIB() {
-
         Token token = lexicalAnalyzer.nextToken();
+        Token idToken = null;
 
         if (token.getTokenType() != TokenType.ID) {
             noticeError(TokenType.ID, token);
+        }
+        else {
+            idToken = token;
         }
 
         token = lexicalAnalyzer.nextToken();
@@ -282,6 +288,12 @@ public class SyntacticAnalyser {
         token = lexicalAnalyzer.nextToken();
         if (token.getTokenType() != TokenType.TERM) {
             noticeError(TokenType.TERM, token);
+        }
+
+        if (idToken != null) {
+            if (SymbolTable.getInstance().getSymbol(idToken.getLexeme()) == null) {
+                noticeError(new IdentifierNotDeclaredError(idToken.getLexeme()));
+            }
         }
     }
 
@@ -668,12 +680,10 @@ public class SyntacticAnalyser {
     }
 
     private void noticeError(List<TokenType> expectedToken, Token receivedToken) {
-        StringBuilder expected = new StringBuilder();
-
+        StringJoiner expected = new StringJoiner(",");
 
         for (TokenType t : expectedToken) {
-            expected.append(t.toString());
-            expected.append(", ");
+            expected.add(t.toString());
         }
 
         noticeError(expected.toString(), receivedToken.getLexeme());
@@ -687,6 +697,10 @@ public class SyntacticAnalyser {
         ErrorHandler.getInstance().addError(new SyntaticError(expected, received));
     }
 
+    private void noticeError(Error error) {
+        ErrorHandler.getInstance().addError(error);
+    }
+
     private boolean containsFirst(NonTerminal type, Token token) {
         return First.getSymbols().get(type).contains(token.getTokenType());
     }
@@ -697,9 +711,11 @@ public class SyntacticAnalyser {
 
     private List<TokenType> createListSymbols(List<List<TokenType>> lists) {
         List<TokenType> list = new ArrayList<>();
+
         for (List<TokenType> l : lists) {
             list.addAll(l);
         }
+
         return list;
     }
 }

@@ -48,6 +48,7 @@ public class IdentifierParser implements Parser {
         }
 
         String identifier = lexeme.toString();
+        fileLoader.resetLastChar();
 
         if (SymbolTable.getInstance().isReservedKeyword(identifier)) {
             throw new ReservedIdentifierException(identifier, fileLoader.getLine(), fileLoader.getColumn() - identifier.length());
