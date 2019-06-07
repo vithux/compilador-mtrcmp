@@ -7,6 +7,7 @@
 package lexical.parser.numeric;
 
 import automata.FiniteStateMachine;
+import exceptions.ExpectedTokenException;
 import exceptions.IllegalTokenException;
 import exceptions.NoSuchTransitionException;
 import lexical.parser.Parser;
@@ -48,7 +49,19 @@ public class NumericParser implements Parser {
                         .build();
             }
             catch (EOFException e) {
-                return EOFTokenBuilderSingleton.getInstance().withCursorLocation(fileLoader);
+                if (!stateMachine.isFinal()) {
+                    throw new IllegalTokenException('\0', lexeme.toString(), fileLoader.getLine(), fileLoader.getColumn());
+                }
+
+                NumericType numericType = NumberParserStateMachine.getNumericTypeFromFinalState(stateMachine);
+                TokenBuilder tokenBuilder = NumericTokenBuilderFactory.get(numericType);
+
+                fileLoader.resetLastChar();
+
+                return tokenBuilder
+                        .setCursorLocation(fileLoader)
+                        .setLexeme(lexeme)
+                        .build();
             }
         }
     }
